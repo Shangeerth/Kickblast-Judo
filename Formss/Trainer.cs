@@ -1,0 +1,440 @@
+﻿using Programming_Assigment.Athlete;
+using Programming_Assigment.Classes;
+using Programming_Assigment.Formss;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static Programming_Assigment.Program;
+
+namespace Programming_Assigment.Database
+{
+    public partial class Trainer : Form
+    {
+        private readonly TrainerCLZ link;
+        public Trainer()
+        {
+            InitializeComponent();
+            link = new TrainerCLZ(new Sql());
+            dataGridView1.DataSource = link.GetTrainers();
+            load();
+            clear();
+
+
+
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+
+        }
+
+        private void Insert_Click(object sender, EventArgs e)
+        {
+            // Ensure no Trainer ID is selected
+            if (id.SelectedIndex != -1)
+            {
+                MessageBox.Show("Please clear the form before inserting a new trainer.");
+                id.SelectedIndex = -1;
+                return;
+            }
+           
+
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(name.Text) ||
+                string.IsNullOrWhiteSpace(agee.Text) ||
+                string.IsNullOrWhiteSpace(exp.Text) ||
+                string.IsNullOrWhiteSpace(Quali.Text) ||
+                string.IsNullOrWhiteSpace(NIC1.Text) ||
+                string.IsNullOrWhiteSpace(Salary123.Text) ||
+                string.IsNullOrWhiteSpace(Contact12.Text))
+            {
+                MessageBox.Show("Please fill in all required fields.");
+                return;
+            }
+
+            try
+            {
+                // Validate Name - only letters and spaces
+                string namePattern = @"^[a-zA-Z\s]+$";
+                if (!Regex.IsMatch(name.Text.Trim(), namePattern))
+                {
+                    MessageBox.Show("Please enter a valid name containing only letters and spaces.");
+                    return;
+                }
+
+
+                if (link.IsTrainerNameUnique(namePattern))
+                {
+                    MessageBox.Show("Trainer name already exists. Please use a different name.", "Duplicate Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+
+
+                // Validate NIC - alphanumeric only
+                string nicPattern = @"^[a-zA-Z0-9]+$";
+                if (!Regex.IsMatch(NIC1.Text.Trim(), nicPattern))
+                {
+                    MessageBox.Show("Please enter a valid NIC containing only letters and numbers.");
+                    return;
+                }
+
+                // Parse and validate numeric fields
+                if (!decimal.TryParse(Salary123.Text.Trim(), out decimal salaryVal) || salaryVal <= 0)
+                {
+                    MessageBox.Show("Please enter a valid positive number for Salary.");
+                    return;
+                }
+
+                if (!int.TryParse(exp.Text.Trim(), out int experienceVal) || experienceVal <= 0)
+                {
+                    MessageBox.Show("Please enter a valid positive number for Experience.");
+                    return;
+                }
+
+                if (!int.TryParse(Contact12.Text.Trim(), out int contactVal) || contactVal <= 0)
+                {
+                    MessageBox.Show("Please enter a valid positive number for Contact.");
+                    return;
+                }
+
+                if (!int.TryParse(agee.Text.Trim(), out int age) || age <= 0)
+                {
+                    MessageBox.Show("Please enter a valid positive number for Weight.");
+                    return;
+                }
+
+                // Get string fields
+                string nameVal = name.Text.Trim();
+                string qualificationVal = Quali.Text.Trim();
+                string nicVal = NIC1.Text.Trim();
+              
+
+                // Insert into Trainer table
+                bool insertResult = link.InsertTrainer(nameVal, age, experienceVal, qualificationVal, nicVal, contactVal, salaryVal);
+
+                if (insertResult)
+                {
+                    MessageBox.Show("Trainer added successfully.");
+                    id.SelectedIndex = -1;
+                    dataGridView1.DataSource = link.GetTrainers(); // Refresh list
+                    load();
+                    clear();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to add trainer.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+
+
+        }
+
+        private void Update_Click(object sender, EventArgs e)
+        {
+
+            // Ensure a Trainer ID is selected for update
+            if (id.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please select a trainer to update.");
+                return;
+            }
+
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(name.Text) ||
+                string.IsNullOrWhiteSpace(agee.Text) ||
+                string.IsNullOrWhiteSpace(exp.Text) ||
+                string.IsNullOrWhiteSpace(Quali.Text) ||
+                string.IsNullOrWhiteSpace(NIC1.Text) ||
+                string.IsNullOrWhiteSpace(Salary123.Text) ||
+                string.IsNullOrWhiteSpace(Contact12.Text))
+            {
+                MessageBox.Show("Please fill in all required fields.");
+                return;
+            }
+
+            try
+            {
+                // Validate Name - only letters and spaces
+                string namePattern = @"^[a-zA-Z\s]+$";
+                if (!Regex.IsMatch(name.Text.Trim(), namePattern))
+                {
+                    MessageBox.Show("Please enter a valid name containing only letters and spaces.");
+                    return;
+                }
+
+                int trainerId = Convert.ToInt32(id.SelectedItem.ToString()); 
+
+                if (!link.IsTrainerNameUnique(namePattern, trainerId))
+                {
+                    MessageBox.Show("This trainer name already exists.", "Duplicate Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Validate NIC - alphanumeric only
+                string nicPattern = @"^[a-zA-Z0-9]+$";
+                if (!Regex.IsMatch(NIC1.Text.Trim(), nicPattern))
+                {
+                    MessageBox.Show("Please enter a valid NIC containing only letters and numbers.");
+                    return;
+                }
+
+                // Parse and validate numeric fields
+                if (!decimal.TryParse(Salary123.Text.Trim(), out decimal salaryVal) || salaryVal <= 0)
+                {
+                    MessageBox.Show("Please enter a valid positive number for Salary.");
+                    return;
+                }
+
+                if (!int.TryParse(exp.Text.Trim(), out int experienceVal) || experienceVal <= 0)
+                {
+                    MessageBox.Show("Please enter a valid positive number for Experience.");
+                    return;
+                }
+
+                if (!int.TryParse(Contact12.Text.Trim(), out int contactVal) || contactVal <= 0)
+                {
+                    MessageBox.Show("Please enter a valid positive number for Contact.");
+                    return;
+                }
+
+                if (!int.TryParse(agee.Text.Trim(), out int age) || age <= 0)
+                {
+                    MessageBox.Show("Please enter a valid positive number for Age.");
+                    return;
+                }
+
+                // Get values
+                string nameVal = name.Text.Trim();
+                string qualificationVal = Quali.Text.Trim();
+                string nicVal = NIC1.Text.Trim();
+
+                // Update Trainer
+                bool updateResult = link.UpdateTrainer(trainerId, nameVal, age, experienceVal, qualificationVal, nicVal, contactVal, salaryVal);
+
+                if (updateResult)
+                {
+                    MessageBox.Show("Trainer updated successfully.");
+                    id.SelectedIndex = -1;
+                    dataGridView1.DataSource = link.GetTrainers();
+                    load();
+                    clear();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to update trainer.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+
+        }
+
+        private void Delete_Click(object sender, EventArgs e)
+        {
+            if (id.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please pick an Trainer ID.");
+                return;
+            }
+
+            DialogResult result = MessageBox.Show("Are you sure you want to delete this Trainer?",
+                                                  "Delete Confirmation",
+                                                  MessageBoxButtons.YesNo,
+                                                  MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    int Trainer = Convert.ToInt32(id.SelectedValue);
+                    link.DeleteTrainer(Trainer);
+                    MessageBox.Show("Trainer successfully deleted!");
+
+                    dataGridView1.DataSource = link.GetTrainers();
+                    load();
+                   clear();
+
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
+            }
+
+        }
+
+
+        internal void load()
+        {
+
+        
+
+            id.DropDownStyle = ComboBoxStyle.DropDownList;
+            id.DataSource = link.GetTrainerIds();
+            id.SelectedIndex = -1;
+        }
+        private void clear()
+        {
+            name.Clear();
+            agee.Clear();
+            exp.Clear();
+            Quali.Clear();
+            NIC1.Clear();
+            Contact12.Clear();
+            Salary123.Clear();
+
+            id.SelectedIndex = -1;
+        }
+
+        private void id_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (id.SelectedValue != null)
+            {
+                int id1 = Convert.ToInt32(id.SelectedValue);
+                fill(id1);
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string searchText = textBox1.Text;
+            var r = link.SearchTrainers(searchText);
+            dataGridView1.DataSource = r;
+        }
+
+        private void fill(int tr)
+        {
+            var trr = link.GetTrainers();  // Assume this returns a list of athlete records
+
+            var tr1 = trr.FirstOrDefault(a => a.Id == tr);
+
+            if (tr1 != null)
+            {
+                id.SelectedItem = tr1.Id;
+
+                name.Text = tr1.Name;
+                Salary123.Text = tr1.Salary.ToString();
+                Quali.Text = tr1.Qualification.ToString();
+                exp.Text = tr1.Experience.ToString();
+                NIC1.Text = tr1.NIC;
+                agee.Text = tr1.Age.ToString();
+                Contact12.Text = tr1.Contact.ToString();
+
+                
+            }
+            else
+            {
+                MessageBox.Show("Trainer not found.");
+            }
+        }
+
+        private void Clear_Click(object sender, EventArgs e)
+        {
+            clear();
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = link.GetTrainers();
+        }
+
+        private void Athlete_Click(object sender, EventArgs e)
+        {
+            Form1 newForm = new Form1();
+            NavigationManager.OpenForm(this, newForm);
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            button2.Enabled=false;
+            Trainer newForm = new Trainer();
+            NavigationManager.OpenForm(this, newForm);
+
+        }
+
+        private void Private_Coaching_Click(object sender, EventArgs e)
+        {
+            Coaching newForm = new Coaching();
+            NavigationManager.OpenForm(this, newForm);
+
+        }
+
+        private void Training_plan_Click(object sender, EventArgs e)
+        {
+            Athleteplanform newForm = new Athleteplanform();
+            NavigationManager.OpenForm(this, newForm);
+
+
+        }
+
+        private void Plan_Click(object sender, EventArgs e)
+        {
+            TrainningPlan newForm = new TrainningPlan();
+            NavigationManager.OpenForm(this, newForm);
+        }
+
+        private void Competition_Click(object sender, EventArgs e)
+        {
+
+            Competition newForm = new Competition();
+            NavigationManager.OpenForm(this, newForm);
+
+        }
+
+        private void Athlete_Competition_Click(object sender, EventArgs e)
+        {
+            CompetitionAthlete newForm = new CompetitionAthlete();
+            NavigationManager.OpenForm(this, newForm);
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Weightcategoryy newForm = new Weightcategoryy();
+            NavigationManager.OpenForm(this, newForm);
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void Back_Click(object sender, EventArgs e)
+        {
+            NavigationManager.GoBack();
+            this.Close();
+        }
+
+        private void Logout_Click(object sender, EventArgs e)
+        {
+            Welcome wel = new Welcome();
+            wel.Show();
+            this.Close();
+        }
+
+        private void Payment_Click(object sender, EventArgs e)
+        {
+            payment newForm = new payment();
+            NavigationManager.OpenForm(this, newForm);
+        }
+    }
+}
