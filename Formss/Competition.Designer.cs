@@ -57,7 +57,6 @@
             this.Private_Coaching = new System.Windows.Forms.Button();
             this.Trainer = new System.Windows.Forms.Button();
             this.Athlete = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -367,17 +366,6 @@
             this.Athlete.UseVisualStyleBackColor = true;
             this.Athlete.Click += new System.EventHandler(this.Athlete_Click);
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.Color.Yellow;
-            this.label4.Location = new System.Drawing.Point(553, 263);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(147, 25);
-            this.label4.TabIndex = 185;
-            this.label4.Text = "Session Done";
-            // 
             // Competition
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -385,7 +373,6 @@
             this.BackColor = System.Drawing.SystemColors.HotTrack;
             this.ClientSize = new System.Drawing.Size(1044, 549);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.Time);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.name);
@@ -445,6 +432,5 @@
         private System.Windows.Forms.Button Private_Coaching;
         private System.Windows.Forms.Button Trainer;
         private System.Windows.Forms.Button Athlete;
-        private System.Windows.Forms.Label label4;
     }
 }

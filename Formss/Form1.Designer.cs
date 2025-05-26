@@ -55,23 +55,12 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label2 = new System.Windows.Forms.Label();
             this.caid = new System.Windows.Forms.ComboBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.Payment = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.Athlete_Competition = new System.Windows.Forms.Button();
-            this.Competition = new System.Windows.Forms.Button();
-            this.Plan = new System.Windows.Forms.Button();
-            this.Training_plan = new System.Windows.Forms.Button();
-            this.Private_Coaching = new System.Windows.Forms.Button();
-            this.Trainer = new System.Windows.Forms.Button();
-            this.Athlete = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // Insert
             // 
-            this.Insert.Location = new System.Drawing.Point(259, 487);
+            this.Insert.Location = new System.Drawing.Point(56, 489);
             this.Insert.Name = "Insert";
             this.Insert.Size = new System.Drawing.Size(75, 23);
             this.Insert.TabIndex = 2;
@@ -81,7 +70,7 @@
             // 
             // name
             // 
-            this.name.Location = new System.Drawing.Point(367, 110);
+            this.name.Location = new System.Drawing.Point(164, 112);
             this.name.Name = "name";
             this.name.Size = new System.Drawing.Size(151, 22);
             this.name.TabIndex = 3;
@@ -91,7 +80,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Yellow;
-            this.label1.Location = new System.Drawing.Point(239, 37);
+            this.label1.Location = new System.Drawing.Point(24, 39);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(107, 25);
             this.label1.TabIndex = 4;
@@ -101,7 +90,7 @@
             // id
             // 
             this.id.FormattingEnabled = true;
-            this.id.Location = new System.Drawing.Point(367, 37);
+            this.id.Location = new System.Drawing.Point(164, 39);
             this.id.Name = "id";
             this.id.Size = new System.Drawing.Size(151, 24);
             this.id.TabIndex = 5;
@@ -109,7 +98,7 @@
             // 
             // Update
             // 
-            this.Update.Location = new System.Drawing.Point(367, 487);
+            this.Update.Location = new System.Drawing.Point(164, 489);
             this.Update.Name = "Update";
             this.Update.Size = new System.Drawing.Size(75, 23);
             this.Update.TabIndex = 7;
@@ -119,7 +108,7 @@
             // 
             // Delete
             // 
-            this.Delete.Location = new System.Drawing.Point(465, 487);
+            this.Delete.Location = new System.Drawing.Point(262, 489);
             this.Delete.Name = "Delete";
             this.Delete.Size = new System.Drawing.Size(75, 23);
             this.Delete.TabIndex = 8;
@@ -129,7 +118,7 @@
             // 
             // Clear
             // 
-            this.Clear.Location = new System.Drawing.Point(563, 487);
+            this.Clear.Location = new System.Drawing.Point(360, 489);
             this.Clear.Name = "Clear";
             this.Clear.Size = new System.Drawing.Size(75, 23);
             this.Clear.TabIndex = 9;
@@ -139,7 +128,7 @@
             // 
             // Back
             // 
-            this.Back.Location = new System.Drawing.Point(857, 513);
+            this.Back.Location = new System.Drawing.Point(654, 515);
             this.Back.Name = "Back";
             this.Back.Size = new System.Drawing.Size(75, 23);
             this.Back.TabIndex = 10;
@@ -149,7 +138,7 @@
             // 
             // Logout
             // 
-            this.Logout.Location = new System.Drawing.Point(938, 513);
+            this.Logout.Location = new System.Drawing.Point(735, 515);
             this.Logout.Name = "Logout";
             this.Logout.Size = new System.Drawing.Size(75, 23);
             this.Logout.TabIndex = 11;
@@ -162,7 +151,7 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.Yellow;
-            this.label3.Location = new System.Drawing.Point(278, 110);
+            this.label3.Location = new System.Drawing.Point(63, 109);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(68, 25);
             this.label3.TabIndex = 12;
@@ -173,7 +162,7 @@
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.Yellow;
-            this.label4.Location = new System.Drawing.Point(266, 179);
+            this.label4.Location = new System.Drawing.Point(51, 180);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(80, 25);
             this.label4.TabIndex = 14;
@@ -181,7 +170,7 @@
             // 
             // weight
             // 
-            this.weight.Location = new System.Drawing.Point(367, 182);
+            this.weight.Location = new System.Drawing.Point(164, 184);
             this.weight.Name = "weight";
             this.weight.Size = new System.Drawing.Size(151, 22);
             this.weight.TabIndex = 13;
@@ -192,7 +181,7 @@
             this.Nic123.AutoSize = true;
             this.Nic123.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Nic123.ForeColor = System.Drawing.Color.Yellow;
-            this.Nic123.Location = new System.Drawing.Point(723, 59);
+            this.Nic123.Location = new System.Drawing.Point(520, 61);
             this.Nic123.Name = "Nic123";
             this.Nic123.Size = new System.Drawing.Size(49, 25);
             this.Nic123.TabIndex = 16;
@@ -200,7 +189,7 @@
             // 
             // NIC
             // 
-            this.NIC.Location = new System.Drawing.Point(803, 60);
+            this.NIC.Location = new System.Drawing.Point(618, 61);
             this.NIC.Name = "NIC";
             this.NIC.Size = new System.Drawing.Size(151, 22);
             this.NIC.TabIndex = 15;
@@ -210,7 +199,7 @@
             this.Contact1.AutoSize = true;
             this.Contact1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Contact1.ForeColor = System.Drawing.Color.Yellow;
-            this.Contact1.Location = new System.Drawing.Point(685, 128);
+            this.Contact1.Location = new System.Drawing.Point(482, 130);
             this.Contact1.Name = "Contact1";
             this.Contact1.Size = new System.Drawing.Size(87, 25);
             this.Contact1.TabIndex = 18;
@@ -218,7 +207,7 @@
             // 
             // Contact
             // 
-            this.Contact.Location = new System.Drawing.Point(803, 128);
+            this.Contact.Location = new System.Drawing.Point(618, 133);
             this.Contact.Name = "Contact";
             this.Contact.Size = new System.Drawing.Size(151, 22);
             this.Contact.TabIndex = 17;
@@ -228,7 +217,7 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.Yellow;
-            this.label7.Location = new System.Drawing.Point(698, 196);
+            this.label7.Location = new System.Drawing.Point(495, 198);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(74, 25);
             this.label7.TabIndex = 20;
@@ -236,7 +225,7 @@
             // 
             // Height
             // 
-            this.Height.Location = new System.Drawing.Point(803, 200);
+            this.Height.Location = new System.Drawing.Point(618, 198);
             this.Height.Name = "Height";
             this.Height.Size = new System.Drawing.Size(151, 22);
             this.Height.TabIndex = 19;
@@ -246,7 +235,7 @@
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.Yellow;
-            this.label8.Location = new System.Drawing.Point(254, 243);
+            this.label8.Location = new System.Drawing.Point(39, 246);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(92, 25);
             this.label8.TabIndex = 22;
@@ -254,7 +243,7 @@
             // 
             // address
             // 
-            this.address.Location = new System.Drawing.Point(367, 244);
+            this.address.Location = new System.Drawing.Point(164, 246);
             this.address.Name = "address";
             this.address.Size = new System.Drawing.Size(151, 22);
             this.address.TabIndex = 21;
@@ -264,7 +253,7 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.Color.Yellow;
-            this.label9.Location = new System.Drawing.Point(641, 269);
+            this.label9.Location = new System.Drawing.Point(438, 271);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(131, 25);
             this.label9.TabIndex = 24;
@@ -272,7 +261,7 @@
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(803, 272);
+            this.dateTimePicker1.Location = new System.Drawing.Point(618, 274);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(229, 22);
             this.dateTimePicker1.TabIndex = 25;
@@ -284,7 +273,7 @@
             this.Search.AutoSize = true;
             this.Search.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Search.ForeColor = System.Drawing.Color.Yellow;
-            this.Search.Location = new System.Drawing.Point(794, 12);
+            this.Search.Location = new System.Drawing.Point(591, 14);
             this.Search.Name = "Search";
             this.Search.Size = new System.Drawing.Size(81, 25);
             this.Search.TabIndex = 27;
@@ -292,7 +281,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(881, 12);
+            this.textBox1.Location = new System.Drawing.Point(696, 14);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(151, 22);
             this.textBox1.TabIndex = 26;
@@ -302,7 +291,7 @@
             // 
             this.dataGridView1.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(259, 330);
+            this.dataGridView1.Location = new System.Drawing.Point(56, 332);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
@@ -315,7 +304,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Yellow;
-            this.label2.Location = new System.Drawing.Point(254, 294);
+            this.label2.Location = new System.Drawing.Point(31, 296);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 25);
             this.label2.TabIndex = 91;
@@ -324,137 +313,18 @@
             // caid
             // 
             this.caid.FormattingEnabled = true;
-            this.caid.Location = new System.Drawing.Point(367, 295);
+            this.caid.Location = new System.Drawing.Point(164, 297);
             this.caid.Name = "caid";
             this.caid.Size = new System.Drawing.Size(151, 24);
             this.caid.TabIndex = 92;
             this.caid.SelectedIndexChanged += new System.EventHandler(this.caid_SelectedIndexChanged);
-            // 
-            // panel1
-            // 
-            this.panel1.AutoScroll = true;
-            this.panel1.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.panel1.Controls.Add(this.Payment);
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.Athlete_Competition);
-            this.panel1.Controls.Add(this.Competition);
-            this.panel1.Controls.Add(this.Plan);
-            this.panel1.Controls.Add(this.Training_plan);
-            this.panel1.Controls.Add(this.Private_Coaching);
-            this.panel1.Controls.Add(this.Trainer);
-            this.panel1.Controls.Add(this.Athlete);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(202, 549);
-            this.panel1.TabIndex = 93;
-            // 
-            // Payment
-            // 
-            this.Payment.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Payment.Location = new System.Drawing.Point(22, 495);
-            this.Payment.Name = "Payment";
-            this.Payment.Size = new System.Drawing.Size(163, 34);
-            this.Payment.TabIndex = 16;
-            this.Payment.Text = "Payment";
-            this.Payment.UseVisualStyleBackColor = true;
-            this.Payment.Click += new System.EventHandler(this.Payment_Click);
-            // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(22, 435);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(163, 34);
-            this.button1.TabIndex = 14;
-            this.button1.Text = "Weight Category";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // Athlete_Competition
-            // 
-            this.Athlete_Competition.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Athlete_Competition.Location = new System.Drawing.Point(22, 379);
-            this.Athlete_Competition.Name = "Athlete_Competition";
-            this.Athlete_Competition.Size = new System.Drawing.Size(163, 34);
-            this.Athlete_Competition.TabIndex = 13;
-            this.Athlete_Competition.Text = "Athlete Competition";
-            this.Athlete_Competition.UseVisualStyleBackColor = true;
-            this.Athlete_Competition.Click += new System.EventHandler(this.Athlete_Competition_Click);
-            // 
-            // Competition
-            // 
-            this.Competition.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Competition.Location = new System.Drawing.Point(22, 323);
-            this.Competition.Name = "Competition";
-            this.Competition.Size = new System.Drawing.Size(163, 34);
-            this.Competition.TabIndex = 12;
-            this.Competition.Text = "Competition";
-            this.Competition.UseVisualStyleBackColor = true;
-            this.Competition.Click += new System.EventHandler(this.Competition_Click);
-            // 
-            // Plan
-            // 
-            this.Plan.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Plan.Location = new System.Drawing.Point(22, 267);
-            this.Plan.Name = "Plan";
-            this.Plan.Size = new System.Drawing.Size(163, 34);
-            this.Plan.TabIndex = 11;
-            this.Plan.Text = "Training Plan";
-            this.Plan.UseVisualStyleBackColor = true;
-            this.Plan.Click += new System.EventHandler(this.Plan_Click);
-            // 
-            // Training_plan
-            // 
-            this.Training_plan.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Training_plan.Location = new System.Drawing.Point(22, 211);
-            this.Training_plan.Name = "Training_plan";
-            this.Training_plan.Size = new System.Drawing.Size(163, 34);
-            this.Training_plan.TabIndex = 10;
-            this.Training_plan.Text = "Athlete Training Plan";
-            this.Training_plan.UseVisualStyleBackColor = true;
-            this.Training_plan.Click += new System.EventHandler(this.Training_plan_Click);
-            // 
-            // Private_Coaching
-            // 
-            this.Private_Coaching.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Private_Coaching.Location = new System.Drawing.Point(22, 156);
-            this.Private_Coaching.Name = "Private_Coaching";
-            this.Private_Coaching.Size = new System.Drawing.Size(163, 34);
-            this.Private_Coaching.TabIndex = 9;
-            this.Private_Coaching.Text = "Private Coaching";
-            this.Private_Coaching.UseVisualStyleBackColor = true;
-            this.Private_Coaching.Click += new System.EventHandler(this.Private_Coaching_Click);
-            // 
-            // Trainer
-            // 
-            this.Trainer.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Trainer.Location = new System.Drawing.Point(22, 101);
-            this.Trainer.Name = "Trainer";
-            this.Trainer.Size = new System.Drawing.Size(163, 34);
-            this.Trainer.TabIndex = 8;
-            this.Trainer.Text = "Trainer";
-            this.Trainer.UseVisualStyleBackColor = true;
-            this.Trainer.Click += new System.EventHandler(this.Trainer_Click);
-            // 
-            // Athlete
-            // 
-            this.Athlete.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Athlete.Location = new System.Drawing.Point(22, 42);
-            this.Athlete.Name = "Athlete";
-            this.Athlete.Size = new System.Drawing.Size(163, 34);
-            this.Athlete.TabIndex = 7;
-            this.Athlete.Text = "Athlete";
-            this.Athlete.UseVisualStyleBackColor = true;
-            this.Athlete.Click += new System.EventHandler(this.Athlete_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MediumBlue;
-            this.ClientSize = new System.Drawing.Size(1044, 549);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(867, 549);
             this.Controls.Add(this.caid);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.dataGridView1);
@@ -482,11 +352,11 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.name);
             this.Controls.Add(this.Insert);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
             this.Text = "Athlete";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -520,16 +390,6 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox caid;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button Payment;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button Athlete_Competition;
-        private System.Windows.Forms.Button Competition;
-        private System.Windows.Forms.Button Plan;
-        private System.Windows.Forms.Button Training_plan;
-        private System.Windows.Forms.Button Private_Coaching;
-        private System.Windows.Forms.Button Trainer;
-        private System.Windows.Forms.Button Athlete;
     }
 }
 

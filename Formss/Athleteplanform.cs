@@ -403,72 +403,7 @@ namespace Programming_Assigment.Formss
 
         }
 
-        private void Athlete_Click(object sender, EventArgs e)
-        {
-            Form1 newForm = new Form1();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
-        private void Trainer_Click(object sender, EventArgs e)
-        {
-            Trainer newForm = new Trainer();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Private_Coaching_Click(object sender, EventArgs e)
-        {
-            Coaching newForm = new Coaching();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Training_plan_Click(object sender, EventArgs e)
-        {
-            Training_plan.Enabled=false;
-            Athleteplanform newForm = new Athleteplanform();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Plan_Click(object sender, EventArgs e)
-        {
-            TrainningPlan newForm = new TrainningPlan();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Competition_Click(object sender, EventArgs e)
-        {
-            Competition newForm = new Competition();
-            NavigationManager.OpenForm(this, newForm);
-
-
-        }
-
-        private void Athlete_Competition_Click(object sender, EventArgs e)
-        {
-            CompetitionAthlete newForm = new CompetitionAthlete();
-            NavigationManager.OpenForm(this, newForm);
-
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Weightcategoryy newForm = new Weightcategoryy();
-            NavigationManager.OpenForm(this, newForm);
-
-
-        }
-
-        private void Payment_Click(object sender, EventArgs e)
-        {
-            payment newForm = new payment();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
+        
         private void Logout_Click(object sender, EventArgs e)
         {
             Welcome wel = new Welcome();

@@ -474,12 +474,7 @@ namespace Programming_Assigment
 
         }
 
-        private void Athlete_Click(object sender, EventArgs e)
-        {
-           Athlete .Enabled = false;
-            Form1 newForm = new Form1();
-            NavigationManager.OpenForm(this, newForm);
-        }
+       
 
         private void Trainer_Click(object sender, EventArgs e)
         {
