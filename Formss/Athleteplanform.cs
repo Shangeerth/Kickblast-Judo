@@ -257,8 +257,8 @@ namespace Programming_Assigment.Formss
         private void load()
         {
            
-            aname.DataSource = link.GetAllAthleteNames();
-            planname.DataSource=link.GetAllPlanNames();
+            aname.DataSource = link.GetAthleteIDs();
+            planname.DataSource=link.GetTrainingPlanIDs();
             id.DataSource = link.GetAthleteTrainingPlanIds();
             id.DropDownStyle = ComboBoxStyle.DropDownList;
             planname.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -278,40 +278,63 @@ namespace Programming_Assigment.Formss
 
         private void aname_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+            if (aname.SelectedValue != null)
+            {
+                int athleteId;
+
+                // Safely parse athlete ID from ComboBox
+                if (int.TryParse(aname.SelectedValue.ToString(), out athleteId))
+                {
+                    // Get athlete name using ID
+                    string athleteName = link.GetAthleteNameById(athleteId);
+
+                    // Set the name to your text field
+                    athname.Text = athleteName;
+                }
+                else
+                {
+                    MessageBox.Show("Invalid athlete ID selected.");
+                }
+            }
         }
 
         private void planname_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (planname.SelectedItem != null)
             {
-                string selectedPlanName = planname.SelectedItem.ToString(); // Get the plan name as string
-
-                int sessions = link.GetSessionsPerWeekByName(selectedPlanName); // Pass string
-
-                tsession.Text = sessions.ToString();
-            }
-            if (planname.SelectedItem != null)
-            {
-                string selectedPlanName = planname.SelectedItem.ToString(); // Get the plan name as string
-
-                decimal sessions = link.GetPlanFeeByName(selectedPlanName); // Pass string
-
-                Feee.Text = sessions.ToString();
-            }
-
-            string selectedPlanName1 = planname.Text.Trim();  // or id.Text if you show plan names in ComboBox
-
-            if (selectedPlanName1.Equals("Intermediate", StringComparison.OrdinalIgnoreCase)
-            || selectedPlanName1.Equals("Elite", StringComparison.OrdinalIgnoreCase))
-            {
-                // Step 3: Check if athlete already enrolled in this plan
-                bool isEnrolled = link.IsAthleteEnrolledInPlan(Name, selectedPlanName1);
-
-                if (isEnrolled)
+                // Assuming planname's SelectedValue or SelectedItem is PlanID (int)
+                int selectedPlanId;
+                if (int.TryParse(planname.SelectedValue?.ToString() ?? planname.SelectedItem.ToString(), out selectedPlanId))
                 {
-                    MessageBox.Show($"Athlete is already enrolled in the '{selectedPlanName1}' training plan.");
-                    return; // Or handle accordingly
+                    // Get sessions and fee by PlanID directly
+                    int sessions = link.GetSessionsPerWeekByPlanId(selectedPlanId);
+                    tsession.Text = sessions.ToString();
+
+                    decimal fee = link.GetPlanFeeByPlanId(selectedPlanId);
+                    Feee.Text = fee.ToString();
+
+                    string name = link.GetPlanNameById(selectedPlanId);
+                    plname.Text = name;
+
+
+                    // Retrieve athlete ID from your form (replace this with actual logic)
+                    int athleteId = 0; // <-- e.g., int.Parse(athleteComboBox.SelectedValue.ToString());
+
+                    if (athleteId > 0)
+                    {
+                        // Check enrollment by IDs only
+                        bool isEnrolled = link.IsAthleteEnrolledInPlan(athleteId, selectedPlanId);
+
+                        if (isEnrolled)
+                        {
+                            MessageBox.Show("Athlete is already enrolled in the selected training plan.");
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Invalid Plan selection.");
                 }
             }
 
@@ -352,6 +375,8 @@ namespace Programming_Assigment.Formss
         {
             Feee.Clear();
             sessionsss.Clear();
+            plname.Clear();
+            athname.Clear();
             tsession.Clear();
             id.SelectedIndex = -1;
             aname.SelectedIndex = -1;

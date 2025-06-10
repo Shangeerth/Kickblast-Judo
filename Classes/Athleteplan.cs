@@ -257,6 +257,55 @@ namespace Programming_Assigment.Classes
 
             return plans;
         }
+
+        public List<int> GetAthleteIDs()
+        {
+            var athleteIds = new List<int>();
+
+            try
+            {
+                string query = "SELECT AthleteID FROM Athlete";
+
+                DataTable dt = db.ExecuteQuery(query, new SqlParameter[0]);
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    athleteIds.Add(Convert.ToInt32(dr["AthleteID"]));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching athlete IDs: {ex.Message}", ex);
+            }
+
+            return athleteIds;
+        }
+
+
+        public List<int> GetTrainingPlanIDs()
+        {
+            var planIds = new List<int>();
+
+            try
+            {
+                string query = "SELECT PlanID FROM TrainingPlan";
+
+                DataTable dt = db.ExecuteQuery(query, new SqlParameter[0]);
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    planIds.Add(Convert.ToInt32(dr["PlanID"]));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching training plan IDs: {ex.Message}", ex);
+            }
+
+            return planIds;
+        }
+
+
         public bool IsAthleteInDifferentPlan(string athleteName, string planName)
         {
             string query = @"
@@ -276,34 +325,64 @@ namespace Programming_Assigment.Classes
         }
 
 
-
-        public int GetSessionsPerWeekByName(string planName)
+        public int GetSessionsPerWeekByPlanId(int planId)
         {
             try
             {
-                string query = "SELECT SessionsPerWeek FROM TrainingPlan WHERE Name = @PlanName";
+                string query = "SELECT SessionsPerWeek FROM TrainingPlan WHERE PlanID = @PlanID";
+                SqlParameter[] parameters = { new SqlParameter("@PlanID", planId) };
 
-                SqlParameter[] parameters = {
-            new SqlParameter("@PlanName", planName)
-        };
-
-                object result = db.ExecuteScalar(query, parameters); // Get the first column of the first row
+                object result = db.ExecuteScalar(query, parameters);
 
                 if (result != null && int.TryParse(result.ToString(), out int sessionsPerWeek))
-                {
                     return sessionsPerWeek;
-                }
                 else
-                {
                     throw new Exception("Plan not found or invalid SessionsPerWeek value.");
-                }
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error fetching sessions per week by name: {ex.Message}", ex);
+                throw new Exception($"Error fetching sessions per week by PlanID: {ex.Message}", ex);
             }
         }
-       
+
+        public decimal GetPlanFeeByPlanId(int planId)
+        {
+            try
+            {
+                string query = "SELECT WeeklyFee FROM TrainingPlan WHERE PlanID = @PlanID";
+                SqlParameter[] parameters = { new SqlParameter("@PlanID", planId) };
+
+                object result = db.ExecuteScalar(query, parameters);
+
+                if (result != null && decimal.TryParse(result.ToString(), out decimal fee))
+                    return fee;
+                else
+                    throw new Exception("Plan fee not found or invalid.");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching plan fee by PlanID: {ex.Message}", ex);
+            }
+        }
+
+
+        public bool IsAthleteEnrolledInPlan(int athleteId, int planId)
+        {
+            string query = @"
+        SELECT COUNT(*) 
+        FROM AthleteTrainingPlan
+        WHERE AthleteID = @AthleteID AND PlanID = @PlanID";
+
+            SqlParameter[] parameters = {
+        new SqlParameter("@AthleteID", athleteId),
+        new SqlParameter("@PlanID", planId)
+    };
+
+            int count = Convert.ToInt32(db.ExecuteScalar(query, parameters));
+            return count > 0;
+        }
+
+
 
         public List<string> GetAllAthleteNames()
         {
@@ -349,50 +428,7 @@ namespace Programming_Assigment.Classes
             }
         }
 
-        public bool IsAthleteEnrolledInPlan(string athleteName, string planName)
-        {
-            string query = @"
-        SELECT COUNT(*) 
-        FROM AthleteTrainingPlan atp
-        JOIN TrainingPlan tp ON atp.PlanID = tp.PlanID
-        JOIN Athlete a ON atp.AthleteID = a.AthleteID
-        WHERE a.Name = @AthleteName AND tp.Name = @PlanName";
-
-            SqlParameter[] parameters = {
-        new SqlParameter("@AthleteName", athleteName),
-        new SqlParameter("@PlanName", planName)
-    };
-
-            int count = Convert.ToInt32(db.ExecuteScalar(query, parameters));
-            return count > 0;
-        }
-
-        public decimal GetPlanFeeByName(string planName)
-        {
-            try
-            {
-                string query = "SELECT WeeklyFee FROM TrainingPlan WHERE Name = @PlanName";
-
-                SqlParameter[] parameters = {
-            new SqlParameter("@PlanName", planName)
-        };
-
-                object result = db.ExecuteScalar(query, parameters);
-
-                if (result != null && decimal.TryParse(result.ToString(), out decimal fee))
-                {
-                    return fee;
-                }
-                else
-                {
-                    throw new Exception("Plan fee not found or invalid.");
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error fetching plan fee by name: {ex.Message}", ex);
-            }
-        }
+     
 
         public int GetSessionsCountForAthleteWithinWeek(string athleteName, DateTime startOfWeek, DateTime endOfWeek)
         {
@@ -478,6 +514,44 @@ namespace Programming_Assigment.Classes
             return ids;
         }
 
+        public string GetAthleteNameById(int athleteId)
+        {
+            try
+            {
+                string query = "SELECT Name FROM Athlete WHERE AthleteID = @AthleteID";
+
+                SqlParameter[] parameters = {
+            new SqlParameter("@AthleteID", athleteId)
+        };
+
+                object result = db.ExecuteScalar(query, parameters);
+
+                if (result != null)
+                    return result.ToString();
+                else
+                    throw new Exception("Athlete not found.");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching athlete name: {ex.Message}", ex);
+            }
+        }
+
+
+        public string GetPlanNameById(int planId)
+        {
+            string query = "SELECT Name FROM TrainingPlan WHERE PlanID = @PlanID";
+
+            SqlParameter[] parameters = {
+        new SqlParameter("@PlanID", planId)
+    };
+
+            object result = db.ExecuteScalar(query, parameters);
+            if (result != null)
+                return result.ToString();
+            else
+                throw new Exception("Plan name not found for given ID.");
+        }
 
 
     }

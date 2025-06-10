@@ -21,10 +21,13 @@ namespace Programming_Assigment.Classes
         {
             InitializeComponent();
             link = new athleteCompetion(new Sql());
-            dataGridView1.DataSource=link.GetAthleteCompetitionDetails();
-            load();
-            clear();
 
+            // Load data grid and combo boxes
+            dataGridView1.DataSource = link.GetAthleteCompetitionDetails();
+            LoadComboBoxes();
+            ClearForm();
+
+            // Form settings
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -35,7 +38,8 @@ namespace Programming_Assigment.Classes
 
         private void Insert_Click(object sender, EventArgs e)
         {
-            // Exit if existing record is selected
+
+            // If an existing record is selected in ID dropdown, block insert
             if (id != null && id.SelectedIndex != -1)
             {
                 MessageBox.Show("Please clear the form before inserting a new Athlete Competition record.");
@@ -43,51 +47,51 @@ namespace Programming_Assigment.Classes
                 return;
             }
 
-            string athleteName = aname.Text.Trim();
-            string competitionName = cname.Text.Trim();
-            string selectedPlan = plan.Text.Trim();
-
-            // Exit if athlete or competition or plan is empty
-            if (string.IsNullOrWhiteSpace(athleteName) || string.IsNullOrWhiteSpace(competitionName) || string.IsNullOrWhiteSpace(selectedPlan))
+            // Validate combo box selections
+            if (aid.SelectedItem == null || comid.SelectedItem == null || plan.SelectedItem == null)
             {
-                MessageBox.Show("Please fill in all fields: Athlete Name, Competition Name, and Training Plan.");
+                MessageBox.Show("Please select Athlete ID, Competition ID, and Training Plan.");
                 return;
             }
 
-            // Check if athlete is enrolled in the selected plan
-            if (!link.IsAthleteEnrolledInTrainingPlan(athleteName, selectedPlan))
+            int selectedAthleteId = (int)aid.SelectedValue;
+            int selectedCompetitionId = (int)comid.SelectedValue;
+            string selectedPlanName = plan.SelectedItem.ToString();
+
+            // Get the athlete name for display
+            string athleteName = link.GetAthleteNameById(selectedAthleteId);
+
+            // Check if athlete is enrolled in selected plan
+            if (!link.IsAthleteEnrolledInTrainingPlan(selectedAthleteId, selectedPlanName))
             {
-                MessageBox.Show($"{athleteName} is NOT enrolled in the {selectedPlan} plan.");
+                MessageBox.Show($"{athleteName} is NOT enrolled in the {selectedPlanName} plan.");
                 return;
             }
 
-            // Check if athlete is already registered in this competition with this training plan
-            if (link.CheckAthleteCompetitionExists(athleteName, competitionName, selectedPlan))
-            {
-                MessageBox.Show($"{athleteName} is already registered for {competitionName} under the {selectedPlan} plan.");
-                MessageBox.Show($" One Athlete can enter one competition Name despite multiple Training      Plan," +
-                                $"  Try entrolling Under different Competition name");
+          
 
+            // Beginner plan restriction
+            if (selectedPlanName == "Beginner")
+            {
+                MessageBox.Show("Beginner plan is not allowed to enter any competition.");
                 return;
             }
-
-            if (plan.SelectedItem != null && plan.SelectedItem.ToString() == "Beginner")
-            {
-                MessageBox.Show("Beginner plan is not allowed to enter any competition");
-                return;
-            }
-
 
             try
             {
-                bool insertResult = link.InsertAthleteCompetition(athleteName, competitionName);
+                // ✅ Get PlanID from Plan Name
+                int selectedPlanId = link.GetTrainingPlanIdByName(selectedPlanName);
+                List<int> selectedPlanIds = new List<int> { selectedPlanId };
+
+                // ✅ Insert into AthleteCompetition and related training plan table
+                bool insertResult = link.InsertAthleteCompetition(selectedAthleteId, selectedCompetitionId, selectedPlanIds);
 
                 if (insertResult)
                 {
                     MessageBox.Show("Athlete registered for competition successfully.");
-                    dataGridView1.DataSource = link.GetAthleteCompetitionDetails(); // Refresh data
-                    load();
-                   clear(); // Uncomment if you want to clear form
+                    dataGridView1.DataSource = link.GetAthleteCompetitionDetails(); // Refresh data grid
+                    LoadComboBoxes();
+                    ClearForm();
                 }
                 else
                 {
@@ -99,57 +103,63 @@ namespace Programming_Assigment.Classes
                 MessageBox.Show($"Error: {ex.Message}");
             }
 
-
         }
-
         private void Update_Click(object sender, EventArgs e)
         {
-            // Ensure an existing record is selected
+            // Check if an AthleteCompetition record is selected
             if (id == null || id.SelectedIndex == -1)
             {
                 MessageBox.Show("Please select a record to update.");
                 return;
             }
 
-            string athleteName = aname.Text.Trim();
-            string competitionName = cname.Text.Trim();
-            string selectedPlan = plan.Text.Trim();
-
-            // Exit if athlete or competition or plan is empty
-            if (string.IsNullOrWhiteSpace(athleteName) || string.IsNullOrWhiteSpace(competitionName) || string.IsNullOrWhiteSpace(selectedPlan))
+            // Validate combo box selections
+            if (aid.SelectedItem == null || comid.SelectedItem == null || plan.SelectedItem == null)
             {
-                MessageBox.Show("Please fill in all fields: Athlete Name, Competition Name, and Training Plan.");
+                MessageBox.Show("Please select Athlete ID, Competition ID, and Training Plan.");
                 return;
             }
 
-            // Check if athlete is enrolled in the selected plan
-            if (!link.IsAthleteEnrolledInTrainingPlan(athleteName, selectedPlan))
+            int athleteCompetitionID = (int)id.SelectedValue;
+            int selectedAthleteId = (int)aid.SelectedValue;
+            int selectedCompetitionId = (int)comid.SelectedValue;
+            string selectedPlanName = plan.SelectedItem.ToString();
+
+            // Check if athlete is enrolled in the selected training plan
+            if (!link.IsAthleteEnrolledInTrainingPlan(selectedAthleteId, selectedPlanName))
             {
-                MessageBox.Show($"{athleteName} is NOT enrolled in the {selectedPlan} plan.");
+                MessageBox.Show($"Athlete is NOT enrolled in the {selectedPlanName} plan.");
                 return;
             }
 
-            if (plan.SelectedItem != null && plan.SelectedItem.ToString() == "Beginner")
+            if (selectedPlanName == "Beginner")
             {
-                MessageBox.Show("Beginner plan is not allowed to enter any competition");
+                MessageBox.Show("Beginner plan is not allowed to enter any competition.");
                 return;
             }
-
-
-
-            // Get the selected AthleteCompetitionID from the dropdown
-            int athleteCompetitionID = Convert.ToInt32(id.SelectedItem.ToString());
 
             try
             {
-                bool updateResult = link.UpdateAthleteCompetition(athleteCompetitionID, athleteName, competitionName);
+                // Get Plan ID by Plan Name
+                int planId = link.GetTrainingPlanIdByName(selectedPlanName);
+                if (planId == 0)
+                {
+                    MessageBox.Show("Invalid Training Plan selected.");
+                    return;
+                }
+
+                // Create list with the selected planId (if multiple plans are allowed, modify accordingly)
+                List<int> planIds = new List<int> { planId };
+
+                // Call update method
+                bool updateResult = link.UpdateAthleteCompetition(athleteCompetitionID, selectedAthleteId, selectedCompetitionId, planIds);
 
                 if (updateResult)
                 {
                     MessageBox.Show("Athlete competition record updated successfully.");
-                    dataGridView1.DataSource = link.GetAthleteCompetitionDetails(); // Refresh data
-                    load();
-                    clear(); // Uncomment to clear form after update
+                    dataGridView1.DataSource = link.GetAthleteCompetitionDetails(); // Refresh data grid
+                    LoadComboBoxes();
+                    ClearForm();
                 }
                 else
                 {
@@ -160,8 +170,9 @@ namespace Programming_Assigment.Classes
             {
                 MessageBox.Show($"Error: {ex.Message}");
             }
-
         }
+         
+      
 
         private void Delete_Click(object sender, EventArgs e)
         {
@@ -181,58 +192,73 @@ namespace Programming_Assigment.Classes
                 try
                 {
                     int competitionId = Convert.ToInt32(id.SelectedValue);
-                    link.Delete(competitionId); // This should call your delete method in the DAL
+                    link.Delete(competitionId);
                     MessageBox.Show("Athlete Competition record successfully deleted!");
 
-                    dataGridView1.DataSource = link.GetAthleteCompetitionDetails(); // Refresh the DataGrid
-                    load();
-                    clear();
+                    dataGridView1.DataSource = link.GetAthleteCompetitionDetails();
+                    LoadComboBoxes();
+                    ClearForm();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Error: {ex.Message}");
                 }
             }
-
         }
 
-        private void load()
+        private void LoadComboBoxes()
         {
-            aname.DataSource = link.GetAthleteNamesByTrainingPlan();
+            var athletes = link.GetAthleteIdsByTrainingPlan(); // List<Athlete> with ID and Name
+            aid.DataSource = athletes;
+            aid.SelectedIndex = -1;
+
+            var competitions = link.GetCompetitionIds(); // List<Competition> with ID and Name
+            comid.DataSource = competitions;
+            comid.SelectedIndex = -1;
+
             plan.DataSource = link.GetAllTrainingPlanNames();
-            cname.DataSource= link.GetAllCompetitionNames();
-            cname.DropDownStyle = ComboBoxStyle.DropDownList;
-            aname.DropDownStyle = ComboBoxStyle.DropDownList;
-            id.DropDownStyle = ComboBoxStyle.DropDownList;
+            plan.SelectedIndex = -1;
+
             id.DataSource = link.id();
             id.SelectedIndex = -1;
-            aname.SelectedIndex = -1;
-            cname.SelectedIndex = -1;
+
+            // Set drop down style
+            comid.DropDownStyle = ComboBoxStyle.DropDownList;
+            aid.DropDownStyle = ComboBoxStyle.DropDownList;
+            plan.DropDownStyle = ComboBoxStyle.DropDownList;
+            id.DropDownStyle = ComboBoxStyle.DropDownList;
+
             dateTimePicker1.Enabled = false;
             Feee.Enabled = false;
             timee.Enabled = false;
-            plan.DropDownStyle = ComboBoxStyle.DropDownList;
-            plan.SelectedIndex = -1;
-            
-
-
         }
-
-        private void clear()
+        private void ClearForm()
         {
-            aname.SelectedIndex = -1;
-            cname.SelectedIndex = -1;
+            aid.SelectedIndex = -1;
+            comid.SelectedIndex = -1;
             plan.SelectedIndex = -1;
             Feee.Clear();
             timee.Clear();
-             
-           this.id.SelectedIndex = -1;
+            athname.Clear();
+            comname.Clear();
+            id.SelectedIndex = -1;
             dateTimePicker1.Value = DateTime.Now;
         }
-
         private void aname_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+            if (aid.SelectedValue != null)
+            {
+                if (int.TryParse(aid.SelectedValue.ToString(), out int id))
+                {
+                    string athleteName = link.GetAthleteNameById(id);
+                    athname.Text = athleteName;
+                }
+                else
+                {
+                    MessageBox.Show("Selected athlete ID is invalid.");
+                }
+            }
+
         }
 
         private void plan_SelectedIndexChanged(object sender, EventArgs e)
@@ -245,33 +271,28 @@ namespace Programming_Assigment.Classes
 
         private void cname_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cname.SelectedItem != null)
+            if (comid.SelectedItem != null)
             {
-                string selectedPlan = cname.SelectedItem.ToString(); // Get the plan name as string
+                if (int.TryParse(comid.SelectedItem.ToString(), out int selectedCompetitionId))
+                {
+                    decimal fee = link.GetCompetitionFeeById(selectedCompetitionId);
+                    Feee.Text = fee.ToString();
 
-                decimal sessions = link.GetPlanFeeByName(selectedPlan); // Pass string
+                    DateTime? date = link.GetCompetitionDateById(selectedCompetitionId);
+                    dateTimePicker1.Text = date.HasValue ? date.Value.ToShortDateString() : "No date available";
 
-                Feee.Text = sessions.ToString();
+                    string time = link.GetCompetitionTimeById(selectedCompetitionId);
+                    timee.Text = time;
+
+
+                    string name = link.GetCompetitionNameById(selectedCompetitionId);
+                    comname.Text = name;
+                }
+                else
+                {
+                    MessageBox.Show("Selected competition ID is invalid.");
+                }
             }
-
-            if (cname.SelectedItem != null)
-            {
-                string selectedPlan = cname.SelectedItem.ToString(); 
-
-                DateTime? date = link.GetPlanDateByName(selectedPlan); 
-
-                dateTimePicker1.Text = date.HasValue ? date.Value.ToShortDateString() : "No date found for the selected training plan";
-            }
-
-            if (cname.SelectedItem != null)
-            {
-                string selectedPlan = cname.SelectedItem.ToString(); 
-
-                string sessions = link.GetPlanTimeByName(selectedPlan);
-
-                timee.Text = sessions.ToString();
-            }
-
 
         }
 
@@ -279,29 +300,19 @@ namespace Programming_Assigment.Classes
 
         private void fill(int athleteCompetitionId)
         {
-            // Assuming link.GetAthleteCompetitionDetails() returns List<AthleteCompetitionDetails>
             var details = link.GetAthleteCompetitionDetails();
-
             var competition = details.FirstOrDefault(ac => ac.AthleteCompetitionID == athleteCompetitionId);
 
             if (competition != null)
             {
-
-               plan.SelectedItem = competition.Trainingplan;
-
-                
-
+                plan.SelectedItem = competition.Trainingplan;
                 id.SelectedItem = competition.AthleteCompetitionID;
-
-                aname.Text = competition.AthleteName;
-
-
-                cname.Text = competition.CompetitionName;
-
+                aid.Text = competition.AthleteID.ToString();
+                comid.Text = competition.CompetitionID.ToString();
                 dateTimePicker1.Value = competition.CompetitionDate;
-                Feee.Text = competition.fees.ToString(); 
-                timee.Text = competition.CompetitionTime; 
-               
+                Feee.Text = competition.fees.ToString();
+                timee.Text = competition.CompetitionTime;
+                plan.Text = competition.Trainingplan;
             }
             else
             {
@@ -313,8 +324,8 @@ namespace Programming_Assigment.Classes
         {
             if (id.SelectedValue != null)
             {
-                int id1 = Convert.ToInt32(id.SelectedValue);
-                fill(id1);
+                int selectedId = Convert.ToInt32(id.SelectedValue);
+                fill(selectedId);
             }
         }
 
@@ -326,75 +337,16 @@ namespace Programming_Assigment.Classes
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             string searchText = textBox1.Text;
-            var r = link.SearchAthleteCompetitionDetails(searchText);
-            dataGridView1.DataSource = r;
+            var results = link.SearchAthleteCompetitionDetails(searchText);
+            dataGridView1.DataSource = results;
         }
 
         private void Clear_Click(object sender, EventArgs e)
         {
-            clear();
+            ClearForm();
         }
 
-        private void Athlete_Click(object sender, EventArgs e)
-        {
-            Form1 newForm = new Form1();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
-        private void Trainer_Click(object sender, EventArgs e)
-        {
-            Trainer newForm = new Trainer();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Private_Coaching_Click(object sender, EventArgs e)
-        {
-            Coaching newForm = new Coaching();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
-        private void Training_plan_Click(object sender, EventArgs e)
-        {
-            Athleteplanform newForm = new Athleteplanform();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            TrainningPlan newForm = new TrainningPlan();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-
-            Competition newForm = new Competition();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
-        private void Athlete_Competition_Click(object sender, EventArgs e)
-        {
-            Athlete_Competition.Enabled=false;
-            CompetitionAthlete newForm = new CompetitionAthlete();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Weightcategoryy newForm = new Weightcategoryy();
-            NavigationManager.OpenForm(this, newForm);
-
-
-
-        }
-
-        private void Payment_Click(object sender, EventArgs e)
-        {
-            payment newForm = new payment();
-            NavigationManager.OpenForm(this, newForm);
-        }
+     
 
         private void Logout_Click(object sender, EventArgs e)
         {
@@ -407,6 +359,16 @@ namespace Programming_Assigment.Classes
         {
             NavigationManager.GoBack();
             this.Close();
+        }
+
+        private void CompetitionAthlete_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comname_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -26,25 +26,25 @@ namespace Programming_Assigment.Classes
             try
             {
                 string query = @"
-                    SELECT    
-                        ac.AthleteCompetitionID,
-                        a.AthleteID,
-                        a.Name AS AthleteName,
-                        tp.TrainingPlanNames,
-                        c.CompetitionID,
-                        c.CompetitionName,
-                        c.CompetitionDate,
-                        c.CompetitionTime,
-                        c.CompetitionFee
-                    FROM AthleteCompetition ac
-                    JOIN Athlete a ON ac.AthleteID = a.AthleteID
-                    JOIN Competition c ON ac.CompetitionID = c.CompetitionID
-                    OUTER APPLY (
-                        SELECT STRING_AGG(tp.Name, ', ') AS TrainingPlanNames
-                        FROM AthleteTrainingPlan atp
-                        JOIN TrainingPlan tp ON atp.PlanID = tp.PlanID
-                        WHERE atp.AthleteID = a.AthleteID
-                    ) tp;";
+            SELECT    
+                ac.AthleteCompetitionID,
+                a.AthleteID,
+                a.Name AS AthleteName,
+                tp.TrainingPlanNames,
+                c.CompetitionID,
+                c.CompetitionName,
+                c.CompetitionDate,
+                c.CompetitionTime,
+                c.CompetitionFee
+            FROM AthleteCompetition ac
+            JOIN Athlete a ON ac.AthleteID = a.AthleteID
+            JOIN Competition c ON ac.CompetitionID = c.CompetitionID
+            OUTER APPLY (
+                SELECT STRING_AGG(tp.Name, ', ') AS TrainingPlanNames
+                FROM AthleteCompetitionTrainingPlan actp
+                JOIN TrainingPlan tp ON actp.PlanID = tp.PlanID
+                WHERE actp.AthleteCompetitionID = ac.AthleteCompetitionID
+            ) tp;";
 
                 DataTable dt = db.ExecuteQuery(query, new SqlParameter[0]);
 
@@ -60,7 +60,6 @@ namespace Programming_Assigment.Classes
                         Convert.ToDateTime(dr["CompetitionDate"]),
                         dr["CompetitionTime"].ToString(),
                         dr["CompetitionFee"] == DBNull.Value ? 0m : Convert.ToDecimal(dr["CompetitionFee"])
-
                     ));
                 }
             }
@@ -75,106 +74,106 @@ namespace Programming_Assigment.Classes
 
 
 
-
-
-
-        public bool InsertAthleteCompetition(string athleteName, string competitionName)
+ 
+        public bool InsertAthleteCompetition(int athleteId, int competitionId, List<int> planIds)
         {
             try
             {
-                // Get AthleteID from name
-                string athleteQuery = "SELECT AthleteID FROM Athlete WHERE Name = @AthleteName";
-                SqlParameter[] athleteParams = {
-            new SqlParameter("@AthleteName", athleteName)
-        };
+                if (CheckAthleteCompetitionExists(athleteId, competitionId, ""))
+                    return false;
 
-                object athleteIdObj = db.ExecuteScalar(athleteQuery, athleteParams);
-                if (athleteIdObj == null)
-                    throw new Exception("Invalid athlete name. No matching athlete found.");
-
-                int athleteId = Convert.ToInt32(athleteIdObj);
-
-                // Get CompetitionID from name
-                string competitionQuery = "SELECT CompetitionID FROM Competition WHERE CompetitionName = @CompetitionName";
-                SqlParameter[] competitionParams = {
-            new SqlParameter("@CompetitionName", competitionName)
-        };
-
-                object competitionIdObj = db.ExecuteScalar(competitionQuery, competitionParams);
-                if (competitionIdObj == null)
-                    throw new Exception("Invalid competition name. No matching competition found.");
-
-                int competitionId = Convert.ToInt32(competitionIdObj);
-
-                // Insert into AthleteCompetition
-                string insertQuery = @"
+                // Step 1: Insert into AthleteCompetition and get the new ID
+                string insertCompetitionQuery = @"
             INSERT INTO AthleteCompetition (CompetitionID, AthleteID)
-            VALUES (@competitionId, @athleteId)";
+            VALUES (@competitionId, @athleteId);
+            SELECT SCOPE_IDENTITY();";
 
                 SqlParameter[] insertParams = {
             new SqlParameter("@competitionId", competitionId),
             new SqlParameter("@athleteId", athleteId)
         };
 
-                db.ExecuteNonQuery(insertQuery, insertParams);
+                object result = db.ExecuteScalar(insertCompetitionQuery, insertParams);
+                int athleteCompetitionId = Convert.ToInt32(result);
+
+                // Step 2: Insert into AthleteCompetitionTrainingPlan for each selected plan
+                foreach (int planId in planIds)
+                {
+                    string insertTrainingPlanQuery = @"
+                INSERT INTO AthleteCompetitionTrainingPlan (AthleteCompetitionID, PlanID)
+                VALUES (@athleteCompetitionId, @planId);";
+
+                    SqlParameter[] trainingPlanParams = {
+                new SqlParameter("@athleteCompetitionId", athleteCompetitionId),
+                new SqlParameter("@planId", planId)
+            };
+
+                    db.ExecuteNonQuery(insertTrainingPlanQuery, trainingPlanParams);
+                }
+
                 return true;
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error inserting athlete competition: {ex.Message}", ex);
+                throw new Exception($"Error inserting athlete competition with training plans: {ex.Message}", ex);
             }
         }
 
 
-        public bool UpdateAthleteCompetition(int athleteCompetitionId, string athleteName, string competitionName)
+
+        public bool UpdateAthleteCompetition(int athleteCompetitionId, int newAthleteId, int newCompetitionId, List<int> newPlanIds)
         {
             try
             {
-                // Get AthleteID from name
-                string athleteQuery = "SELECT AthleteID FROM Athlete WHERE Name = @AthleteName";
-                SqlParameter[] athleteParams = {
-            new SqlParameter("@AthleteName", athleteName)
-        };
-
-                object athleteIdObj = db.ExecuteScalar(athleteQuery, athleteParams);
-                if (athleteIdObj == null)
-                    throw new Exception("Invalid athlete name. No matching athlete found.");
-
-                int athleteId = Convert.ToInt32(athleteIdObj);
-
-                // Get CompetitionID from name
-                string competitionQuery = "SELECT CompetitionID FROM Competition WHERE CompetitionName = @CompetitionName";
-                SqlParameter[] competitionParams = {
-            new SqlParameter("@CompetitionName", competitionName)
-        };
-
-                object competitionIdObj = db.ExecuteScalar(competitionQuery, competitionParams);
-                if (competitionIdObj == null)
-                    throw new Exception("Invalid competition name. No matching competition found.");
-
-                int competitionId = Convert.ToInt32(competitionIdObj);
-
-                // Perform the update
-                string updateQuery = @"
+                // Step 1: Update AthleteCompetition
+                string updateCompetitionQuery = @"
             UPDATE AthleteCompetition
-            SET AthleteID = @AthleteID,
-                CompetitionID = @CompetitionID
-            WHERE AthleteCompetitionID = @AthleteCompetitionID";
+            SET AthleteID = @athleteId,
+                CompetitionID = @competitionId
+            WHERE AthleteCompetitionID = @athleteCompetitionId;";
 
                 SqlParameter[] updateParams = {
-            new SqlParameter("@AthleteID", athleteId),
-            new SqlParameter("@CompetitionID", competitionId),
-            new SqlParameter("@AthleteCompetitionID", athleteCompetitionId)
+            new SqlParameter("@athleteId", newAthleteId),
+            new SqlParameter("@competitionId", newCompetitionId),
+            new SqlParameter("@athleteCompetitionId", athleteCompetitionId)
         };
 
-                db.ExecuteNonQuery(updateQuery, updateParams);
+                db.ExecuteNonQuery(updateCompetitionQuery, updateParams);
+
+                // Step 2: Delete existing training plans for this AthleteCompetitionID
+                string deletePlansQuery = @"
+            DELETE FROM AthleteCompetitionTrainingPlan
+            WHERE AthleteCompetitionID = @athleteCompetitionId;";
+
+                SqlParameter[] deleteParams = {
+            new SqlParameter("@athleteCompetitionId", athleteCompetitionId)
+        };
+
+                db.ExecuteNonQuery(deletePlansQuery, deleteParams);
+
+                // Step 3: Insert updated training plan IDs
+                foreach (int planId in newPlanIds)
+                {
+                    string insertPlanQuery = @"
+                INSERT INTO AthleteCompetitionTrainingPlan (AthleteCompetitionID, PlanID)
+                VALUES (@athleteCompetitionId, @planId);";
+
+                    SqlParameter[] insertParams = {
+                new SqlParameter("@athleteCompetitionId", athleteCompetitionId),
+                new SqlParameter("@planId", planId)
+            };
+
+                    db.ExecuteNonQuery(insertPlanQuery, insertParams);
+                }
+
                 return true;
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error updating athlete competition: {ex.Message}", ex);
+                throw new Exception($"Error updating athlete competition and training plans: {ex.Message}", ex);
             }
         }
+
 
 
         public bool Delete(int id)
@@ -252,15 +251,26 @@ namespace Programming_Assigment.Classes
             return detailsList;
         }
 
-
-        public List<string> GetAthleteNamesByTrainingPlan()
+        public int GetTrainingPlanIdByName(string planName)
         {
-            List<string> athleteNames = new List<string>();
+            string query = "SELECT PlanID FROM TrainingPlan WHERE Name = @name";
+            SqlParameter[] parameters = {
+        new SqlParameter("@name", planName)
+    };
+
+            object result = db.ExecuteScalar(query, parameters);
+
+            return result != null ? Convert.ToInt32(result) : -1; // return -1 if not found
+        }
+
+        public List<int> GetAthleteIdsByTrainingPlan()
+        {
+            List<int> athleteIds = new List<int>();
 
             try
             {
                 string query = @"
-            SELECT DISTINCT a.Name AS AthleteName
+            SELECT DISTINCT a.AthleteID
             FROM Athlete a
             JOIN AthleteTrainingPlan atp ON a.AthleteID = atp.AthleteID
             JOIN TrainingPlan tp ON atp.PlanID = tp.PlanID
@@ -270,19 +280,19 @@ namespace Programming_Assigment.Classes
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    athleteNames.Add(row["AthleteName"].ToString());
+                    athleteIds.Add(Convert.ToInt32(row["AthleteID"]));
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error fetching athlete names by training plan: {ex.Message}", ex);
+                throw new Exception($"Error fetching athlete IDs by training plan: {ex.Message}", ex);
             }
 
-            return athleteNames;
+            return athleteIds;
         }
 
 
-        
+
 
 
         public List<string> GetAllTrainingPlanNames()
@@ -310,8 +320,7 @@ namespace Programming_Assigment.Classes
             }
         }
 
-
-        public bool IsAthleteEnrolledInTrainingPlan(string athleteName, string trainingPlanName)
+        public bool IsAthleteEnrolledInTrainingPlan(int athleteId, string trainingPlanName)
         {
             try
             {
@@ -320,10 +329,10 @@ namespace Programming_Assigment.Classes
             FROM Athlete a
             JOIN AthleteTrainingPlan atp ON a.AthleteID = atp.AthleteID
             JOIN TrainingPlan tp ON atp.PlanID = tp.PlanID
-            WHERE a.Name = @AthleteName AND tp.Name = @PlanName";
+            WHERE a.AthleteID = @AthleteID AND tp.Name = @PlanName";
 
                 SqlParameter[] parameters = {
-            new SqlParameter("@AthleteName", athleteName),
+            new SqlParameter("@AthleteID", athleteId),
             new SqlParameter("@PlanName", trainingPlanName)
         };
 
@@ -335,81 +344,50 @@ namespace Programming_Assigment.Classes
                 throw new Exception("Error checking training plan enrollment: " + ex.Message, ex);
             }
         }
-        
-
-        public bool CheckAthleteCompetitionExists(string athleteName, string competitionName, string planName)
-        {
-            string query = @"
-        SELECT COUNT(*) FROM AthleteCompetition ac
-        JOIN Athlete a ON ac.AthleteID = a.AthleteID
-        JOIN Competition c ON ac.CompetitionID = c.CompetitionID
-        JOIN AthleteTrainingPlan atp ON a.AthleteID = atp.AthleteID
-        JOIN TrainingPlan tp ON atp.PlanID = tp.PlanID
-        WHERE a.Name = @AthleteName AND c.CompetitionName = @CompetitionName AND tp.Name = @PlanName";
-
-            SqlParameter[] parameters = {
-        new SqlParameter("@AthleteName", athleteName),
-        new SqlParameter("@CompetitionName", competitionName),
-        new SqlParameter("@PlanName", planName)
-    };
-
-            int count = Convert.ToInt32(db.ExecuteScalar(query, parameters));
-            return count > 0;
-        }
 
 
 
-        public List<string> GetAllCompetitionNames()
-        {
-            try
-            {
-                string query = "SELECT CompetitionName FROM Competition";
+        public bool CheckAthleteCompetitionExists(int athleteId, int competitionId, string planName)
+{
+    try
+    {
+        string query = @"
+           SELECT COUNT(*)
+FROM AthleteCompetition ac
+JOIN AthleteTrainingPlan atp ON ac.AthleteID = atp.AthleteID
+JOIN TrainingPlan tp ON atp.PlanID = tp.PlanID
+WHERE ac.AthleteID = @AthleteID
+  AND ac.CompetitionID = @CompetitionID
+  AND tp.Name = @PlanName";
 
-                DataTable dt = db.ExecuteQuery(query, null); // Assuming `db` is your database helper
+        SqlParameter[] parameters = {
+            new SqlParameter("@AthleteID", athleteId),
+            new SqlParameter("@CompetitionID", competitionId),
+            new SqlParameter("@PlanName", planName)
+        };
 
-                List<string> competitionNames = new List<string>();
-                foreach (DataRow row in dt.Rows)
-                {
-                    competitionNames.Add(row["CompetitionName"].ToString());
-                }
+        object result = db.ExecuteScalar(query, parameters);
+        int count = Convert.ToInt32(result);
 
-                return competitionNames;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error fetching competition names: {ex.Message}", ex);
-            }
-        }
+        return count > 0;
+    }
+    catch (Exception ex)
+    {
+        throw new Exception($"Error checking athlete competition existence: {ex.Message}", ex);
+    }
+}
 
-        public decimal GetPlanFeeByName(string planName)
+
+
+
+        public string GetCompetitionNameById(int competitionId)
         {
             try
             {
-                string query = "SELECT CompetitionFee FROM Competition WHERE CompetitionName = @PlanName";
+                string query = "SELECT CompetitionName FROM Competition WHERE CompetitionID = @CompetitionID";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-            new SqlParameter("@PlanName", planName)
-                };
-
-                object result = db.ExecuteScalar(query, parameters);
-
-                return result != DBNull.Value ? Convert.ToDecimal(result) : 0m;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error fetching training plan fee: {ex.Message}", ex);
-            }
-        }
-
-
-        public string GetPlanTimeByName(string planName)
-        {
-            try
-            {
-                string query = "SELECT CompetitionTime FROM Competition WHERE CompetitionName = @PlanName";
-                SqlParameter[] parameters = new SqlParameter[]
-                {
-            new SqlParameter("@PlanName", planName)
+            new SqlParameter("@CompetitionID", competitionId)
                 };
 
                 object result = db.ExecuteScalar(query, parameters);
@@ -418,18 +396,59 @@ namespace Programming_Assigment.Classes
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error fetching training plan time: {ex.Message}", ex);
+                throw new Exception($"Error fetching competition name: {ex.Message}", ex);
             }
         }
 
-        public DateTime? GetPlanDateByName(string planName)
+
+        public decimal GetCompetitionFeeById(int competitionId)
         {
             try
             {
-                string query = "SELECT CompetitionDate FROM Competition WHERE CompetitionName = @PlanName";
+                string query = "SELECT CompetitionFee FROM Competition WHERE CompetitionID = @CompetitionID";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-            new SqlParameter("@PlanName", planName)
+            new SqlParameter("@CompetitionID", competitionId)
+                };
+
+                object result = db.ExecuteScalar(query, parameters);
+
+                return result != DBNull.Value ? Convert.ToDecimal(result) : 0m;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching competition fee: {ex.Message}", ex);
+            }
+        }
+
+        public string GetCompetitionTimeById(int competitionId)
+        {
+            try
+            {
+                string query = "SELECT CompetitionTime FROM Competition WHERE CompetitionID = @CompetitionID";
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+            new SqlParameter("@CompetitionID", competitionId)
+                };
+
+                object result = db.ExecuteScalar(query, parameters);
+
+                return result != DBNull.Value ? result.ToString() : string.Empty;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching competition time: {ex.Message}", ex);
+            }
+        }
+
+        public DateTime? GetCompetitionDateById(int competitionId)
+        {
+            try
+            {
+                string query = "SELECT CompetitionDate FROM Competition WHERE CompetitionID = @CompetitionID";
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+            new SqlParameter("@CompetitionID", competitionId)
                 };
 
                 object result = db.ExecuteScalar(query, parameters);
@@ -438,7 +457,7 @@ namespace Programming_Assigment.Classes
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error fetching training plan date: {ex.Message}", ex);
+                throw new Exception($"Error fetching competition date: {ex.Message}", ex);
             }
         }
 
@@ -451,19 +470,68 @@ namespace Programming_Assigment.Classes
                 string query = "SELECT AthleteCompetitionID FROM AthleteCompetition";
                 DataTable dt = db.ExecuteQuery(query, new SqlParameter[0]);
 
-                foreach (DataRow dr in dt.Rows)
+                foreach (DataRow row in dt.Rows)
                 {
-                    ids.Add(Convert.ToInt32(dr["AthleteCompetitionID"]));
+                    ids.Add(Convert.ToInt32(row["AthleteCompetitionID"]));
+                }
+
+                return ids;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching AthleteCompetition IDs: " + ex.Message, ex);
+            }
+        }
+
+
+
+        public string GetAthleteNameById(int athleteId)
+        {
+            try
+            {
+                string query = "SELECT Name FROM Athlete WHERE AthleteID = @AthleteID";
+                SqlParameter[] parameters = {
+            new SqlParameter("@AthleteID", athleteId)
+        };
+
+                object result = db.ExecuteScalar(query, parameters);
+                if (result != null)
+                {
+                    return result.ToString();
+                }
+                else
+                {
+                    throw new Exception("No athlete found with the provided ID.");
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error fetching category IDs: {ex.Message}", ex);
+                throw new Exception($"Error fetching athlete name: {ex.Message}", ex);
+            }
+        }
+
+
+        public List<int> GetCompetitionIds()
+        {
+            List<int> ids = new List<int>();
+
+            try
+            {
+                string query = "SELECT CompetitionID FROM Competition";
+                DataTable dt = db.ExecuteQuery(query, new SqlParameter[0]);
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    ids.Add(Convert.ToInt32(dr["CompetitionID"]));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching Competition IDs: {ex.Message}", ex);
             }
 
             return ids;
         }
-
 
     }
 }

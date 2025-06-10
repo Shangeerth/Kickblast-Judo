@@ -53,6 +53,8 @@
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.sessionsss = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.athname = new System.Windows.Forms.TextBox();
+            this.plname = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -299,12 +301,28 @@
             this.label4.TabIndex = 184;
             this.label4.Text = "Sessions Done";
             // 
+            // athname
+            // 
+            this.athname.Location = new System.Drawing.Point(1051, 79);
+            this.athname.Name = "athname";
+            this.athname.Size = new System.Drawing.Size(151, 22);
+            this.athname.TabIndex = 185;
+            // 
+            // plname
+            // 
+            this.plname.Location = new System.Drawing.Point(1051, 143);
+            this.plname.Name = "plname";
+            this.plname.Size = new System.Drawing.Size(151, 22);
+            this.plname.TabIndex = 186;
+            // 
             // Athleteplanform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.ClientSize = new System.Drawing.Size(1131, 586);
+            this.ClientSize = new System.Drawing.Size(1320, 586);
+            this.Controls.Add(this.plname);
+            this.Controls.Add(this.athname);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.sessionsss);
             this.Controls.Add(this.dateTimePicker2);
@@ -367,5 +385,7 @@
         private System.Windows.Forms.DateTimePicker dateTimePicker2;
         private System.Windows.Forms.TextBox sessionsss;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox athname;
+        private System.Windows.Forms.TextBox plname;
     }
 }
