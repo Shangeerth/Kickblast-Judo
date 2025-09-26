@@ -29,9 +29,7 @@ namespace Programming_Assigment.Database
 
             Feee.Text = "90.50";
 
-
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            design();
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
@@ -254,7 +252,7 @@ namespace Programming_Assigment.Database
             aid.DropDownStyle = ComboBoxStyle.DropDownList;
             tid.DropDownStyle = ComboBoxStyle.DropDownList;
             hrs.DropDownStyle = ComboBoxStyle.DropDownList;
-            id.DataSource = link.GetTrainerIds();
+            id.DataSource = link.GetPrivateCoachingIds();
             id.SelectedIndex = -1;
             aid.SelectedIndex = -1;
             tid.SelectedIndex = -1;
@@ -293,19 +291,7 @@ namespace Programming_Assigment.Database
         
         }
 
-        private void clear()
-        {
-            Feee.Clear();
-            tname.Clear();
-            aname.Clear();
-           id.SelectedIndex = -1;
-           aid.SelectedIndex = -1;
-           tid.SelectedIndex = -1;
-           hrs.SelectedIndex = -1;
-           dateTimePicker1.Value = DateTime.Now;
-
-        }
-
+   
         private void id_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (id.SelectedValue != null)
@@ -352,9 +338,23 @@ namespace Programming_Assigment.Database
             clear();
         }
 
+        private void clear()
+        {
+            Feee.Clear();
+            tname.Clear();
+            aname.Clear();
+            id.SelectedIndex = -1;
+            aid.SelectedIndex = -1;
+            tid.SelectedIndex = -1;
+            hrs.SelectedIndex = -1;
+            dateTimePicker1.Value = DateTime.Now;
+
+        }
+
+
         private void Coaching_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         private void Feee_TextChanged(object sender, EventArgs e)
@@ -364,17 +364,96 @@ namespace Programming_Assigment.Database
 
         private void Logout_Click(object sender, EventArgs e)
         {
-            Welcome wel = new Welcome();
-            wel.Show();
-            this.Close();
+            // Get the Dashboard (top-level parent)
+            Form parentDashboard = this.TopLevelControl as Dashboard;
+            if (parentDashboard != null)
+            {
+                parentDashboard.Close(); // This will close the main Dashboard
+            }
+
+            // Restart app with Welcome/Login
+            System.Diagnostics.Process.Start(Application.ExecutablePath);
+            Application.Exit();
 
 
         }
 
         private void Back_Click(object sender, EventArgs e)
         {
-            NavigationManager.GoBack();
-            this.Close();
+            this.Hide();
         }
+
+        private void hrs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            if (hrs.Focused && hrs.SelectedItem != null && int.TryParse(hrs.SelectedItem.ToString(), out int hours))
+            {
+                double feePerHour = 90.50;
+                double totalFee = hours * feePerHour;
+                Feee.Text = totalFee.ToString("F2");
+            }
+        }
+
+
+
+        private void design()
+        {
+            Color formBackColor = Color.FromArgb(34, 34, 34); // Charcoal Black
+
+            Color buttonBackColor = Color.FromArgb(191, 167, 111);   // #BFA76F (Gold)
+            Color buttonForeColor = Color.FromArgb(26, 26, 26);      // #1A1A1A (Dark)
+            Color formTextColor = Color.FromArgb(230, 225, 210); // #E6E1D2 – Ivory White
+
+
+            this.BackColor = formBackColor;
+
+
+            // Set panel background
+            this.BackColor = formBackColor;
+
+
+            label1.ForeColor = formTextColor;
+            label2.ForeColor = formTextColor;
+            label3.ForeColor = formTextColor;
+            label4.ForeColor = formTextColor;
+            label5.ForeColor = formTextColor;
+            label7.ForeColor = formTextColor;
+            Contact1.ForeColor = formTextColor;
+            Nic123.ForeColor = formTextColor;
+            Search.ForeColor = buttonBackColor;
+
+
+
+
+            dataGridView1.BackgroundColor = Color.White; // Or any color you want for background
+            dataGridView1.DefaultCellStyle.ForeColor = Color.Black;  // Text color inside grid cells
+            dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = buttonBackColor; // Or any header text color
+            dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = buttonBackColor; // Header background
+
+
+            Button[] buttons = new Button[]
+                {
+                    Insert,
+                    Clear,
+                    Update,
+                    Delete,
+                    Back,
+                    Logout
+
+
+
+                };
+
+            foreach (var btn in buttons)
+            {
+                btn.BackColor = buttonBackColor;
+                btn.ForeColor = buttonForeColor;
+                btn.FlatStyle = FlatStyle.Flat;
+                btn.FlatAppearance.BorderSize = 0;
+            }
+        }
+
+
+
     }
 }

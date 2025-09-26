@@ -15,45 +15,27 @@ namespace Programming_Assigment
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Athleteplanform());
+            if (args.Length > 0 && args[0] == "dashboard")
+            {
+                // Start directly with Dashboard
+                Application.Run(new Dashboard());
+            }
+            else
+            {
+                //  Start with Login
+                Application.Run(new Welcome());
+
+            }    
+
+            
         }
 
 
 
-        public static class NavigationManager
-        {
-            private static Stack<Form> formHistory = new Stack<Form>();
-
-            public static void OpenForm(Form currentForm, Form newForm)
-            {
-                formHistory.Push(currentForm); // Store the current form
-                newForm.Show();
-                currentForm.Hide();
-            }
-
-            public static void GoBack()
-            {
-                if (formHistory.Count > 0)
-                {
-                    Form previousForm = formHistory.Pop(); // Get the last opened form
-                    previousForm.Show();
-                }
-                else
-                {
-                    Dashboard dashboard = new Dashboard();
-                    dashboard.Show();
-                }
-            }
-
-            public static bool CanGoBack()
-            {
-                return formHistory.Count > 0;
-            }
-        }
 
 
 

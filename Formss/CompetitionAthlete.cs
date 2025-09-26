@@ -26,10 +26,9 @@ namespace Programming_Assigment.Classes
             dataGridView1.DataSource = link.GetAthleteCompetitionDetails();
             LoadComboBoxes();
             ClearForm();
-
+            design(); // Apply custom design
             // Form settings
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
@@ -79,11 +78,9 @@ namespace Programming_Assigment.Classes
 
             try
             {
-                // ✅ Get PlanID from Plan Name
                 int selectedPlanId = link.GetTrainingPlanIdByName(selectedPlanName);
                 List<int> selectedPlanIds = new List<int> { selectedPlanId };
 
-                // ✅ Insert into AthleteCompetition and related training plan table
                 bool insertResult = link.InsertAthleteCompetition(selectedAthleteId, selectedCompetitionId, selectedPlanIds);
 
                 if (insertResult)
@@ -140,7 +137,7 @@ namespace Programming_Assigment.Classes
 
             try
             {
-                // Get Plan ID by Plan Name
+             
                 int planId = link.GetTrainingPlanIdByName(selectedPlanName);
                 if (planId == 0)
                 {
@@ -148,10 +145,8 @@ namespace Programming_Assigment.Classes
                     return;
                 }
 
-                // Create list with the selected planId (if multiple plans are allowed, modify accordingly)
                 List<int> planIds = new List<int> { planId };
 
-                // Call update method
                 bool updateResult = link.UpdateAthleteCompetition(athleteCompetitionID, selectedAthleteId, selectedCompetitionId, planIds);
 
                 if (updateResult)
@@ -232,18 +227,7 @@ namespace Programming_Assigment.Classes
             Feee.Enabled = false;
             timee.Enabled = false;
         }
-        private void ClearForm()
-        {
-            aid.SelectedIndex = -1;
-            comid.SelectedIndex = -1;
-            plan.SelectedIndex = -1;
-            Feee.Clear();
-            timee.Clear();
-            athname.Clear();
-            comname.Clear();
-            id.SelectedIndex = -1;
-            dateTimePicker1.Value = DateTime.Now;
-        }
+   
         private void aname_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (aid.SelectedValue != null)
@@ -346,19 +330,38 @@ namespace Programming_Assigment.Classes
             ClearForm();
         }
 
-     
+
+        private void ClearForm()
+        {
+            aid.SelectedIndex = -1;
+            comid.SelectedIndex = -1;
+            plan.SelectedIndex = -1;
+            Feee.Clear();
+            timee.Clear();
+            athname.Clear();
+            comname.Clear();
+            id.SelectedIndex = -1;
+            dateTimePicker1.Value = DateTime.Now;
+        }
+
 
         private void Logout_Click(object sender, EventArgs e)
         {
-            Welcome wel = new Welcome();
-            wel.Show();
-            this.Close();
+            // Get the Dashboard (top-level parent)
+            Form parentDashboard = this.TopLevelControl as Dashboard;
+            if (parentDashboard != null)
+            {
+                parentDashboard.Close(); // This will close the main Dashboard
+            }
+
+            // Restart app with Welcome/Login
+            System.Diagnostics.Process.Start(Application.ExecutablePath);
+            Application.Exit();
         }
 
         private void Back_Click(object sender, EventArgs e)
         {
-            NavigationManager.GoBack();
-            this.Close();
+            this.Hide();
         }
 
         private void CompetitionAthlete_Load(object sender, EventArgs e)
@@ -370,5 +373,68 @@ namespace Programming_Assigment.Classes
         {
 
         }
+
+
+
+
+
+
+        private void design()
+        {
+            Color formBackColor = Color.FromArgb(34, 34, 34); // Charcoal Black
+
+            Color buttonBackColor = Color.FromArgb(191, 167, 111);   // #BFA76F (Gold)
+            Color buttonForeColor = Color.FromArgb(26, 26, 26);      // #1A1A1A (Dark)
+            Color formTextColor = Color.FromArgb(230, 225, 210); // #E6E1D2 – Ivory White
+
+
+            this.BackColor = formBackColor;
+
+
+            // Set panel background
+            this.BackColor = formBackColor;
+
+
+            label1.ForeColor = formTextColor;
+            label2.ForeColor = formTextColor;
+            label3.ForeColor = formTextColor;
+            label4.ForeColor = formTextColor;
+            label7.ForeColor = formTextColor;
+            Contact1.ForeColor = formTextColor;
+            Nic123.ForeColor = formTextColor;
+            Search.ForeColor = buttonBackColor;
+
+
+
+
+            dataGridView1.BackgroundColor = Color.White; // Or any color you want for background
+            dataGridView1.DefaultCellStyle.ForeColor = Color.Black;  // Text color inside grid cells
+            dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = buttonBackColor; // Or any header text color
+            dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = buttonBackColor; // Header background
+
+
+            Button[] buttons = new Button[]
+                {
+                    Insert,
+                    Clear,
+                    Update,
+                    Delete,
+                    Back,
+                    Logout
+
+
+
+                };
+
+            foreach (var btn in buttons)
+            {
+                btn.BackColor = buttonBackColor;
+                btn.ForeColor = buttonForeColor;
+                btn.FlatStyle = FlatStyle.Flat;
+                btn.FlatAppearance.BorderSize = 0;
+            }
+        }
+
+
     }
 }

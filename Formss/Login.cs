@@ -24,8 +24,10 @@ namespace Programming_Assigment.Classes
         public Login()
         {
             InitializeComponent();
+
             label2.BackColor = Color.FromArgb(0, 255, 255, 255);
             label1.BackColor = Color.FromArgb(0, 255, 255, 255);
+            this.AutoScaleMode = AutoScaleMode.None;
 
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -57,9 +59,11 @@ namespace Programming_Assigment.Classes
                 if (success)
                 {
                     MessageBox.Show("Login Successful!");
-                    Dashboard dashboard = new Dashboard();
-                    dashboard.Show();
-                    this.Hide();
+                    // 🚀 Restart app but tell Program.cs to load Dashboard
+                    System.Diagnostics.Process.Start(Application.ExecutablePath, "dashboard");
+                    Environment.Exit(0);
+
+
                 }
                 else
                 {
@@ -81,9 +85,7 @@ namespace Programming_Assigment.Classes
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Welcome wel = new Welcome();
-            wel.Show();
-            this.Close();
+            Application.Exit();
         }
 
 
@@ -126,6 +128,11 @@ namespace Programming_Assigment.Classes
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
             panel1.BorderStyle = BorderStyle.None;
+
+        }
+
+        private void Login_Load(object sender, EventArgs e)
+        {
 
         }
     }

@@ -15,7 +15,7 @@ namespace Programming_Assigment.Classes
     internal class Athleteplan
     {
 
-        private Sql db = new Sql();
+        private readonly Sql db = new Sql();
 
         public Athleteplan(Sql database)
         {
@@ -71,42 +71,10 @@ namespace Programming_Assigment.Classes
         }
 
 
-
-        public bool InsertAthleteTrainingPlan(DateTime sessionDate, string time, string athleteName, string planName, int athleteSession)
+        public bool InsertAthleteTrainingPlan(DateTime sessionDate, string time, int athleteId, int planId, int athleteSession)
         {
             try
             {
-                // Get PlanID from TrainingPlan name
-                string planQuery = "SELECT PlanID FROM TrainingPlan WHERE Name = @PlanName";
-                SqlParameter[] planParams = {
-            new SqlParameter("@PlanName", planName)
-        };
-
-                object planIdObj = db.ExecuteScalar(planQuery, planParams);
-
-                if (planIdObj == null)
-                {
-                    throw new Exception("Invalid plan name. No matching plan found.");
-                }
-
-                int planId = Convert.ToInt32(planIdObj);
-
-                // Get AthleteID from Athlete name
-                string athleteQuery = "SELECT AthleteID FROM Athlete WHERE Name = @AthleteName";
-                SqlParameter[] athleteParams = {
-            new SqlParameter("@AthleteName", athleteName)
-        };
-
-                object athleteIdObj = db.ExecuteScalar(athleteQuery, athleteParams);
-
-                if (athleteIdObj == null)
-                {
-                    throw new Exception("Invalid athlete name. No matching athlete found.");
-                }
-
-                int athleteId = Convert.ToInt32(athleteIdObj);
-
-                // Insert into AthleteTrainingPlan with athleteSession
                 string insertQuery = @"
             INSERT INTO AthleteTrainingPlan (SessionDate, Time, AthleteID, PlanID, athletesession)
             VALUES (@SessionDate, @Time, @AthleteID, @PlanID, @AthleteSession)";
@@ -129,37 +97,10 @@ namespace Programming_Assigment.Classes
             }
         }
 
-        public bool UpdateAthleteTrainingPlan(int athleteTrainingPlanId, DateTime sessionDate, string time, string athleteName, string planName, int athleteSession)
+        public bool UpdateAthleteTrainingPlan(int athleteTrainingPlanId, DateTime sessionDate, string time, int athleteId, int planId, int athleteSession)
         {
             try
             {
-                // Get PlanID from TrainingPlan name
-                string planQuery = "SELECT PlanID FROM TrainingPlan WHERE Name = @PlanName";
-                SqlParameter[] planParams = {
-            new SqlParameter("@PlanName", planName)
-        };
-
-                object planIdObj = db.ExecuteScalar(planQuery, planParams);
-                if (planIdObj == null)
-                {
-                    throw new Exception("Invalid plan name. No matching plan found.");
-                }
-                int planId = Convert.ToInt32(planIdObj);
-
-                // Get AthleteID from Athlete name
-                string athleteQuery = "SELECT AthleteID FROM Athlete WHERE Name = @AthleteName";
-                SqlParameter[] athleteParams = {
-            new SqlParameter("@AthleteName", athleteName)
-        };
-
-                object athleteIdObj = db.ExecuteScalar(athleteQuery, athleteParams);
-                if (athleteIdObj == null)
-                {
-                    throw new Exception("Invalid athlete name. No matching athlete found.");
-                }
-                int athleteId = Convert.ToInt32(athleteIdObj);
-
-                // Update the AthleteTrainingPlan record by ID
                 string updateQuery = @"
             UPDATE AthleteTrainingPlan
             SET SessionDate = @SessionDate,
@@ -306,23 +247,24 @@ namespace Programming_Assigment.Classes
         }
 
 
-        public bool IsAthleteInDifferentPlan(string athleteName, string planName)
+        public bool IsAthleteInDifferentPlan(int athleteId, int planId)
         {
             string query = @"
         SELECT COUNT(*) 
         FROM AthleteTrainingPlan atp
         JOIN Athlete a ON atp.AthleteID = a.AthleteID
         JOIN TrainingPlan tp ON atp.PlanID = tp.PlanID
-        WHERE a.Name = @name AND tp.Name != @plan";
+        WHERE a.AthleteID = @athleteId AND tp.PlanID != @planId";
 
             SqlParameter[] parameters = {
-        new SqlParameter("@name", athleteName),
-        new SqlParameter("@plan", planName)
+        new SqlParameter("@athleteId", athleteId),
+        new SqlParameter("@planId", planId)
     };
 
             int count = Convert.ToInt32(db.ExecuteScalar(query, parameters));
             return count > 0;
         }
+
 
 
         public int GetSessionsPerWeekByPlanId(int planId)
@@ -428,21 +370,11 @@ namespace Programming_Assigment.Classes
             }
         }
 
-     
 
-        public int GetSessionsCountForAthleteWithinWeek(string athleteName, DateTime startOfWeek, DateTime endOfWeek)
+        public int GetSessionsCountForAthleteWithinWeek(int athleteId, DateTime startOfWeek, DateTime endOfWeek)
         {
             try
             {
-                string getAthleteIdQuery = "SELECT AthleteID FROM Athlete WHERE Name = @AthleteName";
-                SqlParameter[] idParams = { new SqlParameter("@AthleteName", athleteName) };
-                object idObj = db.ExecuteScalar(getAthleteIdQuery, idParams);
-
-                if (idObj == null)
-                    throw new Exception("No athlete found with the provided name.");
-
-                int athleteId = Convert.ToInt32(idObj);
-
                 string countQuery = @"
             SELECT COUNT(*) 
             FROM AthleteTrainingPlan 
@@ -463,6 +395,7 @@ namespace Programming_Assigment.Classes
                 throw new Exception("Error counting athlete sessions this week: " + ex.Message, ex);
             }
         }
+
 
 
 

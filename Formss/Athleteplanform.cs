@@ -25,9 +25,9 @@ namespace Programming_Assigment.Formss
             dataGridView1.DataSource = link.GetAthleteTrainingPlans();
             load();
             clear();
-            dateTimePicker2.Value=DateTime.Now;
-            dateTimePicker1.Value=DateTime.Now;
-
+            dateTimePicker2.Value = DateTime.Now;
+            dateTimePicker1.Value = DateTime.Now;
+            design();
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -43,12 +43,12 @@ namespace Programming_Assigment.Formss
                 id.SelectedIndex = -1;
                 return;
             }
-            
+
             if (string.IsNullOrWhiteSpace(dateTimePicker2.Text) ||
-                string.IsNullOrWhiteSpace(aname.Text) ||
-                string.IsNullOrWhiteSpace(planname.Text))
+                aname.SelectedIndex == -1 ||
+                planname.SelectedIndex == -1)
             {
-                MessageBox.Show("Please fill in all required fields: Time, Athlete Name, and Plan Name.");
+                MessageBox.Show("Please fill in all required fields: Time, Athlete, and Plan.");
                 return;
             }
 
@@ -56,52 +56,45 @@ namespace Programming_Assigment.Formss
             {
                 DateTime sessionDate = dateTimePicker1.Value.Date;
                 string time = dateTimePicker2.Text.Trim();
-                string athleteName = aname.Text.Trim();
-                string planName = planname.Text.Trim();
 
-                if (link.IsAthleteInDifferentPlan(athleteName, planName))
+                int athid = Convert.ToInt32(aname.SelectedValue);   // AthleteID from ComboBox
+                int planid = Convert.ToInt32(planname.SelectedValue); // PlanID from ComboBox
+
+                if (link.IsAthleteInDifferentPlan(athid, planid))
                 {
-                    MessageBox.Show($"Athlete '{athleteName}' is already enrolled in a different training plan.");
+                    MessageBox.Show($"Athlete (ID: {athid}) is already enrolled in a different training plan.");
                     return;
                 }
 
+                int maxSessionsAllowed = link.GetSessionsPerWeekByPlanId(planid);
 
-                int maxSessionsAllowed = 0;
-                string planLower = planName.ToLower();
-
-                if (planLower == "beginner")
-                    maxSessionsAllowed = 2;
-                else if (planLower == "intermediate")
-                    maxSessionsAllowed = 3;
-                else if (planLower == "elite")
-                    maxSessionsAllowed = 5;
-                else
+                if (maxSessionsAllowed == 0)
                 {
-                    MessageBox.Show("Unknown plan name. Cannot validate sessions per week.");
+                    MessageBox.Show("Unknown plan ID or plan has no sessions defined.");
                     return;
                 }
 
-                // 🆕 Calculate week range
-                int daysToSubtract = (int)sessionDate.DayOfWeek == 0 ? 6 : (int)sessionDate.DayOfWeek - 1; // Sunday = 0
+                // Calculate start and end of the selected week
+                int daysToSubtract = (int)sessionDate.DayOfWeek == 0 ? 6 : (int)sessionDate.DayOfWeek - 1;
                 DateTime startOfWeek = sessionDate.AddDays(-daysToSubtract);
                 DateTime endOfWeek = startOfWeek.AddDays(6);
 
-                int currentSessionsThisWeek = link.GetSessionsCountForAthleteWithinWeek(athleteName, startOfWeek, endOfWeek);
+                int currentSessionsThisWeek = link.GetSessionsCountForAthleteWithinWeek(athid, startOfWeek, endOfWeek);
 
                 if (currentSessionsThisWeek >= maxSessionsAllowed)
                 {
-                    MessageBox.Show($"You have already reached the maximum allowed sessions ({maxSessionsAllowed}) for the '{planName}' plan in the selected week.");
+                    MessageBox.Show($"You have already reached the maximum allowed sessions ({maxSessionsAllowed}) for this plan in the selected week.");
                     return;
                 }
 
                 int athleteSession = currentSessionsThisWeek + 1;
 
-                bool insertResult = link.InsertAthleteTrainingPlan(sessionDate, time, athleteName, planName, athleteSession);
+                bool insertResult = link.InsertAthleteTrainingPlan(sessionDate, time, athid, planid, athleteSession);
 
                 if (insertResult)
                 {
                     MessageBox.Show("Athlete training plan inserted successfully.");
-                    dataGridView1.DataSource = link.GetAthleteTrainingPlans(); // Refresh data grid
+                    dataGridView1.DataSource = link.GetAthleteTrainingPlans();
                     load();
                     clear();
                 }
@@ -121,51 +114,46 @@ namespace Programming_Assigment.Formss
         {
             if (id == null || id.SelectedIndex == -1)
             {
-                MessageBox.Show("Please select a Athlete Training record to update.");
+                MessageBox.Show("Please select an Athlete Training record to update.");
                 return;
             }
 
-            
-
-            if (string.IsNullOrWhiteSpace(dateTimePicker2.Text) ||
-                string.IsNullOrWhiteSpace(aname.Text) ||
-                string.IsNullOrWhiteSpace(planname.Text))
+            if (aname.SelectedIndex == -1 || planname.SelectedIndex == -1 || string.IsNullOrWhiteSpace(dateTimePicker2.Text))
             {
-                MessageBox.Show("Please fill in all required fields: Time, Athlete Name, and Plan Name.");
+                MessageBox.Show("Please fill in all required fields: Time, Athlete, and Plan.");
                 return;
             }
 
             try
             {
-                if (string.IsNullOrWhiteSpace(tsession.Text) || dataGridView1.CurrentRow == null)
-                {
-                    MessageBox.Show("Please select a session to update.");
-                    return;
-                }
+                int selectedTrainingPlanId = Convert.ToInt32(id.SelectedValue);
 
-                // Format time string
+                DateTime sessionDate = dateTimePicker1.Value.Date;
                 DateTime selectedTime = dateTimePicker2.Value;
                 string time = selectedTime.ToString("hh:mm:ss tt");
 
-                DateTime sessionDate = dateTimePicker1.Value.Date;
-                string athleteName = aname.Text.Trim();
-                string planName = planname.Text.Trim();
+                int athleteId = Convert.ToInt32(aname.SelectedValue);
+                int planId = Convert.ToInt32(planname.SelectedValue);
 
+                string planText = plname.Text.ToLower();
                 int maxSessionsAllowed = 0;
-                string planLower = planName.ToLower();
 
-                if (planLower == "beginner")
-                    maxSessionsAllowed = 2;
-                else if (planLower == "intermediate")
-                    maxSessionsAllowed = 3;
-                else if (planLower == "elite")
-                    maxSessionsAllowed = 5;
-                else
+                switch (planText)
                 {
-                    MessageBox.Show("Unknown plan name. Cannot validate sessions per week.");
-                    return;
+                    case "beginner":
+                        maxSessionsAllowed = 2;
+                        break;
+                    case "intermediate":
+                        maxSessionsAllowed = 3;
+                        break;
+                    case "elite":
+                        maxSessionsAllowed = 5;
+                        break;
+                    default:
+                        maxSessionsAllowed = 0;
+                        break;
                 }
-                ;
+
 
                 if (maxSessionsAllowed == 0)
                 {
@@ -173,32 +161,47 @@ namespace Programming_Assigment.Formss
                     return;
                 }
 
-
-                int selectedTrainingPlanId = Convert.ToInt32(id.SelectedValue);
-                MessageBox.Show($"Selected ID to update: {selectedTrainingPlanId}");
-
-
+                // Calculate week range (Monday to Sunday)
                 int daysToSubtract = (int)sessionDate.DayOfWeek == 0 ? 6 : (int)sessionDate.DayOfWeek - 1;
                 DateTime startOfWeek = sessionDate.AddDays(-daysToSubtract);
                 DateTime endOfWeek = startOfWeek.AddDays(6);
 
-                int currentSessionsThisWeek = link.GetSessionsCountForAthleteWithinWeek(athleteName, startOfWeek, endOfWeek);
+                int currentSessionsThisWeek = link.GetSessionsCountForAthleteWithinWeek(athleteId, startOfWeek, endOfWeek);
+
+                // Exclude current session if editing an existing one on the same date
+                DataGridViewRow selectedRow = dataGridView1.CurrentRow;
+                if (selectedRow != null)
+                {
+                    DateTime existingDate = Convert.ToDateTime(selectedRow.Cells["SessionDate"].Value);
+                    int existingAthleteId = Convert.ToInt32(selectedRow.Cells["AthleteID"].Value);
+
+                    if (existingDate.Date == sessionDate.Date && existingAthleteId == athleteId)
+                    {
+                        currentSessionsThisWeek--; // subtract the existing session
+                    }
+                }
 
                 int athleteSession = currentSessionsThisWeek + 1;
 
                 if (athleteSession > maxSessionsAllowed)
                 {
-                    MessageBox.Show($"You have already reached the maximum allowed sessions ({maxSessionsAllowed}) for the '{planName}' plan in the selected week.");
+                    MessageBox.Show($"You have already reached the maximum allowed sessions ({maxSessionsAllowed}) for the selected plan in the week.");
                     return;
                 }
 
-                
-                bool updateResult = link.UpdateAthleteTrainingPlan(selectedTrainingPlanId, sessionDate, time, athleteName, planName, athleteSession);
+                bool updateResult = link.UpdateAthleteTrainingPlan(
+                    selectedTrainingPlanId,
+                    sessionDate,
+                    time,
+                    athleteId,
+                    planId,
+                    athleteSession
+                );
 
                 if (updateResult)
                 {
                     MessageBox.Show("Athlete training plan updated successfully.");
-                    dataGridView1.DataSource = link.GetAthleteTrainingPlans(); // Refresh
+                    dataGridView1.DataSource = link.GetAthleteTrainingPlans();
                     load();
                     clear();
                 }
@@ -216,6 +219,37 @@ namespace Programming_Assigment.Formss
 
         private void Delete_Click(object sender, EventArgs e)
         {
+            if (id.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please pick an Coaching ID.");
+                return;
+            }
+
+            DialogResult result = MessageBox.Show("Are you sure you want to delete this Plan ?",
+                                                  "Delete Confirmation",
+                                                  MessageBoxButtons.YesNo,
+                                                  MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    int session = Convert.ToInt32(id.SelectedValue);
+                    link.DeleteAthleteTrainingPlan(session);
+                    MessageBox.Show("Plan successfully deleted!");
+
+                    dataGridView1.DataSource = link.GetAthleteTrainingPlans();
+                    load();
+                    clear();
+
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
+            }
+
 
         }
 
@@ -242,7 +276,7 @@ namespace Programming_Assigment.Formss
 
                     dataGridView1.DataSource = link.GetAthleteTrainingPlans();
                     load();
-                     clear();
+                    clear();
 
 
                 }
@@ -252,13 +286,13 @@ namespace Programming_Assigment.Formss
                 }
             }
         }
-        
+
 
         private void load()
         {
-           
+
             aname.DataSource = link.GetAthleteIDs();
-            planname.DataSource=link.GetTrainingPlanIDs();
+            planname.DataSource = link.GetTrainingPlanIDs();
             id.DataSource = link.GetAthleteTrainingPlanIds();
             id.DropDownStyle = ComboBoxStyle.DropDownList;
             planname.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -274,7 +308,7 @@ namespace Programming_Assigment.Formss
             sessionsss.ReadOnly = true;
         }
 
-        
+
 
         private void aname_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -282,7 +316,6 @@ namespace Programming_Assigment.Formss
             {
                 int athleteId;
 
-                // Safely parse athlete ID from ComboBox
                 if (int.TryParse(aname.SelectedValue.ToString(), out athleteId))
                 {
                     // Get athlete name using ID
@@ -302,11 +335,9 @@ namespace Programming_Assigment.Formss
         {
             if (planname.SelectedItem != null)
             {
-                // Assuming planname's SelectedValue or SelectedItem is PlanID (int)
                 int selectedPlanId;
                 if (int.TryParse(planname.SelectedValue?.ToString() ?? planname.SelectedItem.ToString(), out selectedPlanId))
                 {
-                    // Get sessions and fee by PlanID directly
                     int sessions = link.GetSessionsPerWeekByPlanId(selectedPlanId);
                     tsession.Text = sessions.ToString();
 
@@ -317,8 +348,7 @@ namespace Programming_Assigment.Formss
                     plname.Text = name;
 
 
-                    // Retrieve athlete ID from your form (replace this with actual logic)
-                    int athleteId = 0; // <-- e.g., int.Parse(athleteComboBox.SelectedValue.ToString());
+                    int athleteId = 0;
 
                     if (athleteId > 0)
                     {
@@ -342,14 +372,14 @@ namespace Programming_Assigment.Formss
 
         private void sessionsss_TextChanged(object sender, EventArgs e)
         {
-           
+
 
         }
 
         private void id_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            
+
 
 
 
@@ -371,20 +401,7 @@ namespace Programming_Assigment.Formss
         }
 
 
-        private void clear()
-        {
-            Feee.Clear();
-            sessionsss.Clear();
-            plname.Clear();
-            athname.Clear();
-            tsession.Clear();
-            id.SelectedIndex = -1;
-            aname.SelectedIndex = -1;
-            planname.SelectedIndex = -1;
-            dateTimePicker1.Value = DateTime.Now;
-            dateTimePicker2.Value = DateTime.Now;
 
-        }
 
         private void fill(int coa)
         {
@@ -399,9 +416,11 @@ namespace Programming_Assigment.Formss
                 Feee.Text = pl.WeeklyFee.ToString();
                 dateTimePicker1.Text = pl.SessionDate.ToString();
                 dateTimePicker2.Text = pl.Time.ToString();
-                aname.Text = pl.AthleteName.ToString();
-                planname.Text = pl.PlanName.ToString();
+                aname.Text = pl.AthleteID.ToString();
+                planname.Text = pl.PlanID.ToString();
                 sessionsss.Text = pl.athletesession.ToString();
+                sessionsss.Text = pl.athletesession.ToString();
+
                 tsession.Text = pl.SessionsPerWeek.ToString();
 
 
@@ -417,6 +436,20 @@ namespace Programming_Assigment.Formss
         {
             clear();
         }
+        private void clear()
+        {
+            Feee.Clear();
+            sessionsss.Clear();
+            plname.Clear();
+            athname.Clear();
+            tsession.Clear();
+            id.SelectedIndex = -1;
+            aname.SelectedIndex = -1;
+            planname.SelectedIndex = -1;
+            dateTimePicker1.Value = DateTime.Now;
+            dateTimePicker2.Value = DateTime.Now;
+
+        }
 
         private void Athleteplanform_Load(object sender, EventArgs e)
         {
@@ -428,18 +461,83 @@ namespace Programming_Assigment.Formss
 
         }
 
-        
+
         private void Logout_Click(object sender, EventArgs e)
         {
-            Welcome wel = new Welcome();
-            wel.Show();
-            this.Close();
+            // Get the Dashboard (top-level parent)
+            Form parentDashboard = this.TopLevelControl as Dashboard;
+            if (parentDashboard != null)
+            {
+                parentDashboard.Close(); // This will close the main Dashboard
+            }
+
+            // Restart app with Welcome/Login
+            System.Diagnostics.Process.Start(Application.ExecutablePath);
+            Application.Exit();
         }
 
         private void Back_Click(object sender, EventArgs e)
         {
-            NavigationManager.GoBack();
-            this.Close();
+            this.Hide();
+        }
+
+
+
+        private void design()
+        {
+            Color formBackColor = Color.FromArgb(34, 34, 34); // Charcoal Black
+
+            Color buttonBackColor = Color.FromArgb(191, 167, 111);   // #BFA76F (Gold)
+            Color buttonForeColor = Color.FromArgb(26, 26, 26);      // #1A1A1A (Dark)
+            Color formTextColor = Color.FromArgb(230, 225, 210); // #E6E1D2 – Ivory White
+
+
+            this.BackColor = formBackColor;
+
+
+            // Set panel background
+            this.BackColor = formBackColor;
+
+
+            label1.ForeColor = formTextColor;
+            label2.ForeColor = formTextColor;
+            label3.ForeColor = formTextColor;
+            label4.ForeColor = formTextColor;
+            label5.ForeColor = formTextColor;
+            label6.ForeColor = formTextColor;
+            Contact1.ForeColor = formTextColor;
+            Nic123.ForeColor = formTextColor;
+            Search.ForeColor = buttonBackColor;
+
+
+
+
+            dataGridView1.BackgroundColor = Color.White; // Or any color you want for background
+            dataGridView1.DefaultCellStyle.ForeColor = Color.Black;  // Text color inside grid cells
+            dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = buttonBackColor; // Or any header text color
+            dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = buttonBackColor; // Header background
+
+
+            Button[] buttons = new Button[]
+                {
+                    Insert,
+                    Clear,
+                    Update,
+                    Delete,
+                    Back,
+                    Logout
+
+
+
+                };
+
+            foreach (var btn in buttons)
+            {
+                btn.BackColor = buttonBackColor;
+                btn.ForeColor = buttonForeColor;
+                btn.FlatStyle = FlatStyle.Flat;
+                btn.FlatAppearance.BorderSize = 0;
+            }
         }
     }
 }

@@ -27,10 +27,9 @@ namespace Programming_Assigment.Formss
             dataGridView1.DataSource = link.GetCompetitions();
             load();
             clear();
-
+            design();
 
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
@@ -59,13 +58,6 @@ namespace Programming_Assigment.Formss
             {
               
 
-
-                if (link.DoesCompetitionNameExist(name.Text.Trim()))
-                {
-                    MessageBox.Show("This competition name already exists. Please use a different name.", "Duplicate Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
                 if (!DateTime.TryParse(dateTimePicker1.Text.Trim(), out DateTime competitionDate))
                 {
                     MessageBox.Show("Please enter a valid competition date.");
@@ -77,9 +69,6 @@ namespace Programming_Assigment.Formss
                     MessageBox.Show("Competition can only be scheduled on the 2nd Saturday of the month.");
                     return;
                 }
-
-
-
                 
 
                 string competitionTime = Time.Text.Trim();
@@ -168,7 +157,6 @@ namespace Programming_Assigment.Formss
 
              
 
-                // ✅ Update logic
                 bool updateResult = link.UpdateCompetition(competitionId, competitionDate, competitionTime, competitionFee, competitionName);
 
                 if (updateResult)
@@ -325,83 +313,83 @@ namespace Programming_Assigment.Formss
 
         }
 
-        private void Athlete_Click(object sender, EventArgs e)
-        {
-            Form1 newForm = new Form1();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Trainer_Click(object sender, EventArgs e)
-        {
-            Trainer newForm = new Trainer();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Private_Coaching_Click(object sender, EventArgs e)
-        {
-            Coaching newForm = new Coaching();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Training_plan_Click(object sender, EventArgs e)
-        {
-
-            Athleteplanform newForm = new Athleteplanform();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Plan_Click(object sender, EventArgs e)
-        {
-            TrainningPlan newForm = new TrainningPlan();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            button2.Enabled = false;
-            Competition newForm = new Competition();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
-        private void Athlete_Competition_Click(object sender, EventArgs e)
-        {
-            CompetitionAthlete newForm = new CompetitionAthlete();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
-        
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Weightcategoryy newForm = new Weightcategoryy();
-            NavigationManager.OpenForm(this, newForm);
-
-
-        }
-
-        private void Payment_Click(object sender, EventArgs e)
-        {
-            payment newForm = new payment();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
+   
         private void Back_Click(object sender, EventArgs e)
         {
-            NavigationManager.GoBack();
-            this.Close();
+            this.Hide();
         }
 
         private void Logout_Click(object sender, EventArgs e)
         {
-            Welcome wel = new Welcome();
-            wel.Show();
-            this.Close();
+            // Get the Dashboard (top-level parent)
+            Form parentDashboard = this.TopLevelControl as Dashboard;
+            if (parentDashboard != null)
+            {
+                parentDashboard.Close(); // This will close the main Dashboard
+            }
+
+            // Restart app with Welcome/Login
+            System.Diagnostics.Process.Start(Application.ExecutablePath);
+            Application.Exit();
         }
+
+
+
+        private void design()
+        {
+            Color formBackColor = Color.FromArgb(34, 34, 34); // Charcoal Black
+
+            Color buttonBackColor = Color.FromArgb(191, 167, 111);   // #BFA76F (Gold)
+            Color buttonForeColor = Color.FromArgb(26, 26, 26);      // #1A1A1A (Dark)
+            Color formTextColor = Color.FromArgb(230, 225, 210); // #E6E1D2 – Ivory White
+
+
+            this.BackColor = formBackColor;
+
+
+            // Set panel background
+            this.BackColor = formBackColor;
+
+
+            label1.ForeColor = formTextColor;
+            label2.ForeColor = formTextColor;
+            label3.ForeColor = formTextColor;
+            Contact1.ForeColor = formTextColor;
+            Nic123.ForeColor = formTextColor;
+            Search.ForeColor = buttonBackColor;
+
+
+
+
+            dataGridView1.BackgroundColor = Color.White; // Or any color you want for background
+            dataGridView1.DefaultCellStyle.ForeColor = Color.Black;  // Text color inside grid cells
+            dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = buttonBackColor; // Or any header text color
+            dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = buttonBackColor; // Header background
+
+
+            Button[] buttons = new Button[]
+                {
+                    Insert,
+                    Clear,
+                    Update,
+                    Delete,
+                    Back,
+                    Logout
+
+
+
+                };
+
+            foreach (var btn in buttons)
+            {
+                btn.BackColor = buttonBackColor;
+                btn.ForeColor = buttonForeColor;
+                btn.FlatStyle = FlatStyle.Flat;
+                btn.FlatAppearance.BorderSize = 0;
+            }
+        }
+
+
+
     }
 }

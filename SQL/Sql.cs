@@ -13,7 +13,7 @@ namespace Programming_Assigment
     {
 
 
-        private readonly string connectionString  = @"Data Source=shangeerth_king;Initial Catalog=Programming;Integrated Security=True;";
+        private readonly string connectionString  = @"Data Source=Shangeerth-king;Initial Catalog=Programming;Integrated Security=True;Encrypt=False;";
 
 
 
@@ -48,7 +48,7 @@ namespace Programming_Assigment
             }
         }
 
-        //  ExecuteNonQuery Method (Fixed Duplicate Issue)
+        //  ExecuteNonQuery Method 
         public int ExecuteNonQuery(string query, SqlParameter[] parameters)
         {
             try

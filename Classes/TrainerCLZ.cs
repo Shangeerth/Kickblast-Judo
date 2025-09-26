@@ -187,36 +187,7 @@ namespace Programming_Assigment.Athlete
             return trainers;
         }
 
-        public bool IsTrainerNameUnique(string trainerName, int trainerId = 0)
-        {
-            string query = "SELECT COUNT(*) FROM Trainer WHERE Name = @name";
-
-            // Exclude the current trainer when updating
-            if (trainerId > 0)
-            {
-                query += " AND TrainerID != @id";
-            }
-
-            List<SqlParameter> parameters = new List<SqlParameter>
-    {
-        new SqlParameter("@name", trainerName)
-    };
-
-            if (trainerId > 0)
-            {
-                parameters.Add(new SqlParameter("@id", trainerId));
-            }
-
-            DataTable dt = db.ExecuteQuery(query, parameters.ToArray());
-
-            if (dt.Rows.Count > 0)
-            {
-                int count = Convert.ToInt32(dt.Rows[0][0]);
-                return count == 0; // true = unique
-            }
-
-            return true; // fallback: treat as unique
-        }
+      
 
 
         public List<int> GetTrainerIds()

@@ -1,4 +1,5 @@
-﻿using Programming_Assigment.Database;
+﻿using FontAwesome.Sharp;
+using Programming_Assigment.Database;
 using Programming_Assigment.Formss;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using static Programming_Assigment.Program;
-using FontAwesome.Sharp;
 
 namespace Programming_Assigment.Classes
 {
@@ -18,61 +19,33 @@ namespace Programming_Assigment.Classes
     {
 
         private Form activeForm = null;
-        private IconButton currentBtn;
-        private Color highlightColor = Color.FromArgb(37, 36, 81);
 
         public Dashboard()
         {
             InitializeComponent();
             load();
           
-            this.BackColor = Color.FromArgb(34, 33, 74);
-            panel1.BackColor = Color.FromArgb(100, panel1.BackColor);
-            DisableButton();
+
+
 
         }
 
 
-
-        private void ActivateButton(object btnSender)
-        {
-            currentBtn = btnSender as IconButton;
-            if (currentBtn != null)
-            {
-                currentBtn.BackColor = highlightColor;
-                currentBtn.ForeColor = Color.White;
-                currentBtn.IconColor = Color.White;
-            }
-        }
-
-
-        private void DisableButton()
-        {
-            foreach (Control control in panel1.Controls)
-            {
-                IconButton btn = control as IconButton;
-                if (btn != null)
-                {
-                    btn.BackColor = Color.FromArgb(31, 30, 68);
-                    btn.ForeColor = Color.Gainsboro;
-                    btn.IconColor = Color.Gainsboro;
-                }
-            }
-        }
 
         private void OpenChildForm(Form childForm, object btnSender)
         {
             if (activeForm != null)
                 activeForm.Close();
 
-            ActivateButton(btnSender);
             activeForm = childForm;
             childForm.TopLevel = false;
             childForm.FormBorderStyle = FormBorderStyle.None;
             childForm.Dock = DockStyle.Fill;
+
             panel2.Controls.Clear();
             panel2.Controls.Add(childForm);
             panel2.Tag = childForm;
+
             childForm.BringToFront();
             childForm.Show();
         }
@@ -83,6 +56,46 @@ namespace Programming_Assigment.Classes
         {
             label1.Text=DateTime.Now.ToString("dd/MM/yyyy");
             label2.Text = DateTime.Now.ToString("hh:mm tt");
+
+
+            Color formBackColor = Color.FromArgb(34, 34, 34); // Charcoal Black
+
+            Color buttonBackColor = Color.FromArgb(191, 167, 111);   // #BFA76F (Gold)
+            Color buttonForeColor = Color.FromArgb(26, 26, 26);      // #1A1A1A (Dark)
+            Color formTextColor = Color.FromArgb(230, 225, 210);     // #E6E1D2 (Ivory)
+
+            this.panel2.BackColor = formBackColor;
+
+            foreach (Control ctrl in panel2.Controls)
+            {
+                if (ctrl is Label lbl)
+                {
+                    lbl.ForeColor = formTextColor;
+                }
+            }
+            this.ForeColor = formTextColor;
+
+            Button[] buttons = new Button[]
+{
+                    iconButton1,
+                    iconButton2,
+                    iconButton3,
+                    iconButton4,
+                    iconButton6,
+                    iconButton5,
+                    iconButton7,
+                    iconButton8,
+                    iconButton9
+                    
+                };
+
+            foreach (var btn in buttons)
+            {
+                btn.BackColor = buttonBackColor;
+                btn.ForeColor = buttonForeColor;
+                btn.FlatStyle = FlatStyle.Flat;
+                btn.FlatAppearance.BorderSize = 0;
+            }
         }
     
        
@@ -116,7 +129,7 @@ namespace Programming_Assigment.Classes
 
         private void Dashboard_Load(object sender, EventArgs e)
         {
-
+            this.StartPosition = FormStartPosition.CenterScreen;
         }
 
         private void iconButton2_Click(object sender, EventArgs e)
@@ -152,6 +165,11 @@ namespace Programming_Assigment.Classes
         private void iconButton8_Click(object sender, EventArgs e)
         {
             OpenChildForm(new Weightcategoryy(), sender);
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

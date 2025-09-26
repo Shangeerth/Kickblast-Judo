@@ -58,7 +58,7 @@
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(732, 251);
+            this.dateTimePicker1.Location = new System.Drawing.Point(734, 255);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(200, 22);
             this.dateTimePicker1.TabIndex = 171;
@@ -66,7 +66,7 @@
             // comid
             // 
             this.comid.FormattingEnabled = true;
-            this.comid.Location = new System.Drawing.Point(657, 63);
+            this.comid.Location = new System.Drawing.Point(248, 253);
             this.comid.Name = "comid";
             this.comid.Size = new System.Drawing.Size(151, 24);
             this.comid.TabIndex = 169;
@@ -76,11 +76,11 @@
             // 
             this.dataGridView1.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(223, 319);
+            this.dataGridView1.Location = new System.Drawing.Point(47, 319);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(805, 151);
+            this.dataGridView1.Size = new System.Drawing.Size(1025, 204);
             this.dataGridView1.TabIndex = 167;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
@@ -89,7 +89,7 @@
             this.Search.AutoSize = true;
             this.Search.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Search.ForeColor = System.Drawing.Color.Yellow;
-            this.Search.Location = new System.Drawing.Point(785, 16);
+            this.Search.Location = new System.Drawing.Point(829, 31);
             this.Search.Name = "Search";
             this.Search.Size = new System.Drawing.Size(81, 25);
             this.Search.TabIndex = 166;
@@ -97,7 +97,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(877, 16);
+            this.textBox1.Location = new System.Drawing.Point(921, 31);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(151, 22);
             this.textBox1.TabIndex = 165;
@@ -108,7 +108,7 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.Yellow;
-            this.label7.Location = new System.Drawing.Point(518, 66);
+            this.label7.Location = new System.Drawing.Point(76, 249);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(127, 25);
             this.label7.TabIndex = 164;
@@ -119,7 +119,7 @@
             this.Contact1.AutoSize = true;
             this.Contact1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Contact1.ForeColor = System.Drawing.Color.Yellow;
-            this.Contact1.Location = new System.Drawing.Point(644, 246);
+            this.Contact1.Location = new System.Drawing.Point(646, 250);
             this.Contact1.Name = "Contact1";
             this.Contact1.Size = new System.Drawing.Size(57, 25);
             this.Contact1.TabIndex = 163;
@@ -130,7 +130,7 @@
             this.Nic123.AutoSize = true;
             this.Nic123.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Nic123.ForeColor = System.Drawing.Color.Yellow;
-            this.Nic123.Location = new System.Drawing.Point(652, 122);
+            this.Nic123.Location = new System.Drawing.Point(664, 92);
             this.Nic123.Name = "Nic123";
             this.Nic123.Size = new System.Drawing.Size(49, 25);
             this.Nic123.TabIndex = 162;
@@ -138,7 +138,7 @@
             // 
             // Feee
             // 
-            this.Feee.Location = new System.Drawing.Point(732, 123);
+            this.Feee.Location = new System.Drawing.Point(744, 93);
             this.Feee.Name = "Feee";
             this.Feee.Size = new System.Drawing.Size(151, 22);
             this.Feee.TabIndex = 161;
@@ -149,7 +149,7 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.Yellow;
-            this.label3.Location = new System.Drawing.Point(641, 186);
+            this.label3.Location = new System.Drawing.Point(653, 178);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(60, 25);
             this.label3.TabIndex = 159;
@@ -157,9 +157,9 @@
             // 
             // Logout
             // 
-            this.Logout.Location = new System.Drawing.Point(953, 502);
+            this.Logout.Location = new System.Drawing.Point(978, 568);
             this.Logout.Name = "Logout";
-            this.Logout.Size = new System.Drawing.Size(75, 23);
+            this.Logout.Size = new System.Drawing.Size(94, 41);
             this.Logout.TabIndex = 158;
             this.Logout.Text = "Logout";
             this.Logout.UseVisualStyleBackColor = true;
@@ -167,9 +167,9 @@
             // 
             // Back
             // 
-            this.Back.Location = new System.Drawing.Point(872, 502);
+            this.Back.Location = new System.Drawing.Point(877, 568);
             this.Back.Name = "Back";
-            this.Back.Size = new System.Drawing.Size(75, 23);
+            this.Back.Size = new System.Drawing.Size(94, 41);
             this.Back.TabIndex = 157;
             this.Back.Text = "Back";
             this.Back.UseVisualStyleBackColor = true;
@@ -177,9 +177,9 @@
             // 
             // Clear
             // 
-            this.Clear.Location = new System.Drawing.Point(528, 481);
+            this.Clear.Location = new System.Drawing.Point(349, 547);
             this.Clear.Name = "Clear";
-            this.Clear.Size = new System.Drawing.Size(75, 23);
+            this.Clear.Size = new System.Drawing.Size(75, 35);
             this.Clear.TabIndex = 156;
             this.Clear.Text = "Clear";
             this.Clear.UseVisualStyleBackColor = true;
@@ -187,9 +187,9 @@
             // 
             // Delete
             // 
-            this.Delete.Location = new System.Drawing.Point(430, 481);
+            this.Delete.Location = new System.Drawing.Point(248, 547);
             this.Delete.Name = "Delete";
-            this.Delete.Size = new System.Drawing.Size(75, 23);
+            this.Delete.Size = new System.Drawing.Size(75, 35);
             this.Delete.TabIndex = 155;
             this.Delete.Text = "Delete";
             this.Delete.UseVisualStyleBackColor = true;
@@ -197,9 +197,9 @@
             // 
             // Update
             // 
-            this.Update.Location = new System.Drawing.Point(332, 481);
+            this.Update.Location = new System.Drawing.Point(148, 547);
             this.Update.Name = "Update";
-            this.Update.Size = new System.Drawing.Size(75, 23);
+            this.Update.Size = new System.Drawing.Size(75, 35);
             this.Update.TabIndex = 154;
             this.Update.Text = "Update";
             this.Update.UseVisualStyleBackColor = true;
@@ -208,7 +208,7 @@
             // id
             // 
             this.id.FormattingEnabled = true;
-            this.id.Location = new System.Drawing.Point(289, 59);
+            this.id.Location = new System.Drawing.Point(248, 61);
             this.id.Name = "id";
             this.id.Size = new System.Drawing.Size(151, 24);
             this.id.TabIndex = 153;
@@ -219,7 +219,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Yellow;
-            this.label1.Location = new System.Drawing.Point(155, 59);
+            this.label1.Location = new System.Drawing.Point(76, 59);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 25);
             this.label1.TabIndex = 152;
@@ -227,9 +227,9 @@
             // 
             // Insert
             // 
-            this.Insert.Location = new System.Drawing.Point(224, 481);
+            this.Insert.Location = new System.Drawing.Point(47, 547);
             this.Insert.Name = "Insert";
-            this.Insert.Size = new System.Drawing.Size(75, 23);
+            this.Insert.Size = new System.Drawing.Size(75, 35);
             this.Insert.TabIndex = 151;
             this.Insert.Text = "Insert";
             this.Insert.UseVisualStyleBackColor = true;
@@ -237,7 +237,7 @@
             // 
             // timee
             // 
-            this.timee.Location = new System.Drawing.Point(732, 186);
+            this.timee.Location = new System.Drawing.Point(744, 178);
             this.timee.Name = "timee";
             this.timee.Size = new System.Drawing.Size(151, 22);
             this.timee.TabIndex = 176;
@@ -245,7 +245,7 @@
             // aid
             // 
             this.aid.FormattingEnabled = true;
-            this.aid.Location = new System.Drawing.Point(257, 153);
+            this.aid.Location = new System.Drawing.Point(247, 123);
             this.aid.Name = "aid";
             this.aid.Size = new System.Drawing.Size(151, 24);
             this.aid.TabIndex = 177;
@@ -254,7 +254,7 @@
             // plan
             // 
             this.plan.FormattingEnabled = true;
-            this.plan.Location = new System.Drawing.Point(257, 223);
+            this.plan.Location = new System.Drawing.Point(248, 192);
             this.plan.Name = "plan";
             this.plan.Size = new System.Drawing.Size(151, 24);
             this.plan.TabIndex = 180;
@@ -265,7 +265,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Yellow;
-            this.label2.Location = new System.Drawing.Point(93, 156);
+            this.label2.Location = new System.Drawing.Point(75, 126);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(142, 25);
             this.label2.TabIndex = 174;
@@ -276,7 +276,7 @@
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.Yellow;
-            this.label4.Location = new System.Drawing.Point(83, 219);
+            this.label4.Location = new System.Drawing.Point(76, 188);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(140, 25);
             this.label4.TabIndex = 179;
@@ -284,14 +284,14 @@
             // 
             // athname
             // 
-            this.athname.Location = new System.Drawing.Point(430, 153);
+            this.athname.Location = new System.Drawing.Point(419, 123);
             this.athname.Name = "athname";
             this.athname.Size = new System.Drawing.Size(151, 22);
             this.athname.TabIndex = 181;
             // 
             // comname
             // 
-            this.comname.Location = new System.Drawing.Point(856, 63);
+            this.comname.Location = new System.Drawing.Point(419, 253);
             this.comname.Name = "comname";
             this.comname.Size = new System.Drawing.Size(151, 22);
             this.comname.TabIndex = 182;
@@ -302,7 +302,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.ClientSize = new System.Drawing.Size(1044, 549);
+            this.ClientSize = new System.Drawing.Size(1131, 647);
             this.Controls.Add(this.comname);
             this.Controls.Add(this.athname);
             this.Controls.Add(this.plan);
@@ -328,6 +328,7 @@
             this.Controls.Add(this.id);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Insert);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "CompetitionAthlete";
             this.Text = "CompetitionAthlete";
             this.Load += new System.EventHandler(this.CompetitionAthlete_Load);

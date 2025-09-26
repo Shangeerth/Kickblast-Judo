@@ -28,14 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(payout));
             this.total = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             this.name = new System.Windows.Forms.TextBox();
-            this.printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog();
             this.label2 = new System.Windows.Forms.Label();
             this.user = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -82,10 +79,6 @@
             this.comboBox1.TabIndex = 4;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // printDocument1
-            // 
-            this.printDocument1.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDocument1_PrintPage);
-            // 
             // name
             // 
             this.name.Location = new System.Drawing.Point(221, 81);
@@ -93,16 +86,6 @@
             this.name.Size = new System.Drawing.Size(240, 22);
             this.name.TabIndex = 6;
             this.name.TextChanged += new System.EventHandler(this.name_TextChanged);
-            // 
-            // printPreviewDialog1
-            // 
-            this.printPreviewDialog1.AutoScrollMargin = new System.Drawing.Size(0, 0);
-            this.printPreviewDialog1.AutoScrollMinSize = new System.Drawing.Size(0, 0);
-            this.printPreviewDialog1.ClientSize = new System.Drawing.Size(400, 300);
-            this.printPreviewDialog1.Enabled = true;
-            this.printPreviewDialog1.Icon = ((System.Drawing.Icon)(resources.GetObject("printPreviewDialog1.Icon")));
-            this.printPreviewDialog1.Name = "printPreviewDialog1";
-            this.printPreviewDialog1.Visible = false;
             // 
             // label2
             // 
@@ -183,9 +166,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Drawing.Printing.PrintDocument printDocument1;
         private System.Windows.Forms.TextBox name;
-        private System.Windows.Forms.PrintPreviewDialog printPreviewDialog1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox user;
         private System.Windows.Forms.Label label3;

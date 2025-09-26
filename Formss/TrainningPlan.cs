@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography;
@@ -28,9 +29,8 @@ namespace Programming_Assigment.Classes
             clear();
             dataGridView1.DataSource=link.GetPlans();
 
-
+            Design();
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
@@ -57,7 +57,6 @@ namespace Programming_Assigment.Classes
             try
             {
 
-
                 string namePattern = @"^[a-zA-Z\s]+$";
                 if (!Regex.IsMatch(aname.Text.Trim(), namePattern))
                 {
@@ -65,11 +64,8 @@ namespace Programming_Assigment.Classes
                     return;
                 }
 
-                if (link.IsPlanNameUnique(namePattern))
-                {
-                    MessageBox.Show("This plan name already exists. Please use a different name.", "Duplicate Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+
+                string nameVal = aname.Text.Trim();
 
 
 
@@ -85,9 +81,7 @@ namespace Programming_Assigment.Classes
                     return;
                 }
 
-              
-
-                bool insertResult = link.InsertPlan(namePattern, weeklyFee, sessionsPerWeek);
+                bool insertResult = link.InsertPlan(nameVal, weeklyFee, sessionsPerWeek);
 
                 if (insertResult)
                 {
@@ -128,10 +122,6 @@ namespace Programming_Assigment.Classes
             try
             {
 
-
-
-
-
                 string namePattern = @"^[a-zA-Z\s]+$";
                 if (!Regex.IsMatch(aname.Text.Trim(), namePattern))
                 {
@@ -151,9 +141,7 @@ namespace Programming_Assigment.Classes
                     return;
                 }
 
-
-
-              
+                string nameVal = aname.Text.Trim();
 
                 if (!decimal.TryParse(Feee.Text.Trim(), out decimal weeklyFee) || weeklyFee <= 0)
                 {
@@ -166,10 +154,7 @@ namespace Programming_Assigment.Classes
                     MessageBox.Show("Please enter a valid number of sessions per week (1 to 7).");
                     return;
                 }
-
-              
-
-                bool updateResult = link.UpdatePlan(planId, namePattern, weeklyFee, sessionsPerWeek);
+                     bool updateResult = link.UpdatePlan(planId, nameVal, weeklyFee, sessionsPerWeek);
 
                 if (updateResult)
                 {
@@ -242,13 +227,7 @@ namespace Programming_Assigment.Classes
             }
         }
 
-        private void clear()
-        {
-            Feee.Clear();
-            session.Clear();
-            aname.Clear();
-            id.SelectedIndex = -1;
-        }
+     
 
         private void fill(int coa)
         {
@@ -283,6 +262,15 @@ namespace Programming_Assigment.Classes
             clear();
         }
 
+        private void clear()
+        {
+            Feee.Clear();
+            session.Clear();
+            aname.Clear();
+            id.SelectedIndex = -1;
+        }
+
+
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             string searchText = textBox1.Text;
@@ -292,78 +280,80 @@ namespace Programming_Assigment.Classes
 
         private void Back_Click(object sender, EventArgs e)
         {
-            NavigationManager.GoBack();
-            this.Close(); // Close the current form after going back
-
+            this.Hide();
 
         }
 
-        private void Plan_Click(object sender, EventArgs e)
-        {
-            Plan.Enabled = false;
-        }
-
-        private void Athlete_Click(object sender, EventArgs e)
-        {
-
-            Form1 newForm = new Form1();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
-        
-
-        private void Trainer_Click(object sender, EventArgs e)
-        {
-            Trainer newForm = new Trainer();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
-        private void Private_Coaching_Click(object sender, EventArgs e)
-        {
-            Coaching newForm = new Coaching();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Training_plan_Click(object sender, EventArgs e)
-        {
-            Athleteplanform newForm = new Athleteplanform();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Competition_Click(object sender, EventArgs e)
-        {
-            Competition newForm = new Competition();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Athlete_Competition_Click(object sender, EventArgs e)
-        {
-            CompetitionAthlete newForm = new CompetitionAthlete();
-            NavigationManager.OpenForm(this, newForm);
-
-
-        }
-
-        private void Weight_Click(object sender, EventArgs e)
-        {
-            Weightcategoryy newForm = new Weightcategoryy();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
-        private void Payment_Click(object sender, EventArgs e)
-        {
-            payment newForm = new payment();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
+     
         private void Logout_Click(object sender, EventArgs e)
         {
-            Welcome wel = new Welcome();
-            wel.Show();
-            this.Close();
+            // Get the Dashboard (top-level parent)
+            Form parentDashboard = this.TopLevelControl as Dashboard;
+            if (parentDashboard != null)
+            {
+                parentDashboard.Close(); // This will close the main Dashboard
+            }
+
+            // Restart app with Welcome/Login
+            System.Diagnostics.Process.Start(Application.ExecutablePath);
+            Application.Exit();
+        }
+
+
+
+
+
+        private void Design()
+        {
+            Color formBackColor = Color.FromArgb(34, 34, 34); // Charcoal Black
+
+            Color buttonBackColor = Color.FromArgb(191, 167, 111);   // #BFA76F (Gold)
+            Color buttonForeColor = Color.FromArgb(26, 26, 26);      // #1A1A1A (Dark)
+            Color formTextColor = Color.FromArgb(230, 225, 210); // #E6E1D2 – Ivory White
+
+
+            this.BackColor = formBackColor;
+
+
+            // Set panel background
+            this.BackColor = formBackColor;
+
+
+            label1.ForeColor = formTextColor;
+            label2.ForeColor = formTextColor;
+            label5.ForeColor = formTextColor;
+            Nic123.ForeColor = formTextColor;
+            Search.ForeColor = buttonBackColor;
+
+
+
+
+            dataGridView1.BackgroundColor = Color.White; // Or any color you want for background
+            dataGridView1.DefaultCellStyle.ForeColor = Color.Black;  // Text color inside grid cells
+            dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = buttonBackColor; // Or any header text color
+            dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = buttonBackColor; // Header background
+
+
+            Button[] buttons = new Button[]
+                {
+                    Insert,
+                    Clear,
+                    Update,
+                    Delete,
+                    Back,
+                    Logout
+
+
+
+                };
+
+            foreach (var btn in buttons)
+            {
+                btn.BackColor = buttonBackColor;
+                btn.ForeColor = buttonForeColor;
+                btn.FlatStyle = FlatStyle.Flat;
+                btn.FlatAppearance.BorderSize = 0;
+            }
         }
     }
 }

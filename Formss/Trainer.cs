@@ -26,11 +26,10 @@ namespace Programming_Assigment.Database
             dataGridView1.DataSource = link.GetTrainers();
             load();
             clear();
-
+            design();
 
 
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
@@ -69,15 +68,6 @@ namespace Programming_Assigment.Database
                     MessageBox.Show("Please enter a valid name containing only letters and spaces.");
                     return;
                 }
-
-
-                if (link.IsTrainerNameUnique(namePattern))
-                {
-                    MessageBox.Show("Trainer name already exists. Please use a different name.", "Duplicate Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-
 
                 // Validate NIC - alphanumeric only
                 string nicPattern = @"^[a-zA-Z0-9]+$";
@@ -177,11 +167,7 @@ namespace Programming_Assigment.Database
 
                 int trainerId = Convert.ToInt32(id.SelectedItem.ToString()); 
 
-                if (!link.IsTrainerNameUnique(namePattern, trainerId))
-                {
-                    MessageBox.Show("This trainer name already exists.", "Duplicate Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+                
 
                 // Validate NIC - alphanumeric only
                 string nicPattern = @"^[a-zA-Z0-9]+$";
@@ -289,18 +275,7 @@ namespace Programming_Assigment.Database
             id.DataSource = link.GetTrainerIds();
             id.SelectedIndex = -1;
         }
-        private void clear()
-        {
-            name.Clear();
-            agee.Clear();
-            exp.Clear();
-            Quali.Clear();
-            NIC1.Clear();
-            Contact12.Clear();
-            Salary123.Clear();
-
-            id.SelectedIndex = -1;
-        }
+   
 
         private void id_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -317,10 +292,10 @@ namespace Programming_Assigment.Database
             var r = link.SearchTrainers(searchText);
             dataGridView1.DataSource = r;
         }
-
+        
         private void fill(int tr)
         {
-            var trr = link.GetTrainers();  // Assume this returns a list of athlete records
+            var trr = link.GetTrainers();  
 
             var tr1 = trr.FirstOrDefault(a => a.Id == tr);
 
@@ -349,69 +324,27 @@ namespace Programming_Assigment.Database
             clear();
         }
 
+        private void clear()
+        {
+            name.Clear();
+            agee.Clear();
+            exp.Clear();
+            Quali.Clear();
+            NIC1.Clear();
+            Contact12.Clear();
+            Salary123.Clear();
+
+            id.SelectedIndex = -1;
+        }
+
+
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             dataGridView1.DataSource = null;
             dataGridView1.DataSource = link.GetTrainers();
         }
 
-        private void Athlete_Click(object sender, EventArgs e)
-        {
-            Form1 newForm = new Form1();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            button2.Enabled=false;
-            Trainer newForm = new Trainer();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Private_Coaching_Click(object sender, EventArgs e)
-        {
-            Coaching newForm = new Coaching();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Training_plan_Click(object sender, EventArgs e)
-        {
-            Athleteplanform newForm = new Athleteplanform();
-            NavigationManager.OpenForm(this, newForm);
-
-
-        }
-
-        private void Plan_Click(object sender, EventArgs e)
-        {
-            TrainningPlan newForm = new TrainningPlan();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
-        private void Competition_Click(object sender, EventArgs e)
-        {
-
-            Competition newForm = new Competition();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Athlete_Competition_Click(object sender, EventArgs e)
-        {
-            CompetitionAthlete newForm = new CompetitionAthlete();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Weightcategoryy newForm = new Weightcategoryy();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
+       
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
@@ -420,21 +353,92 @@ namespace Programming_Assigment.Database
 
         private void Back_Click(object sender, EventArgs e)
         {
-            NavigationManager.GoBack();
-            this.Close();
+            this.Hide();
         }
 
         private void Logout_Click(object sender, EventArgs e)
         {
-            Welcome wel = new Welcome();
-            wel.Show();
-            this.Close();
+            // Get the Dashboard (top-level parent)
+            Form parentDashboard = this.TopLevelControl as Dashboard;
+            if (parentDashboard != null)
+            {
+                parentDashboard.Close(); // This will close the main Dashboard
+            }
+
+            // Restart app with Welcome/Login
+            System.Diagnostics.Process.Start(Application.ExecutablePath);
+            Application.Exit();
         }
 
-        private void Payment_Click(object sender, EventArgs e)
+        private void Trainer_Load(object sender, EventArgs e)
         {
-            payment newForm = new payment();
-            NavigationManager.OpenForm(this, newForm);
+
+        }
+
+
+
+
+
+        private void design()
+        {
+            Color formBackColor = Color.FromArgb(34, 34, 34); // Charcoal Black
+
+            Color buttonBackColor = Color.FromArgb(191, 167, 111);   // #BFA76F (Gold)
+            Color buttonForeColor = Color.FromArgb(26, 26, 26);      // #1A1A1A (Dark)
+            Color formTextColor = Color.FromArgb(230, 225, 210); // #E6E1D2 – Ivory White
+
+
+            this.BackColor = formBackColor;
+
+
+            // Set panel background
+            this.BackColor = formBackColor;
+
+
+            label1.ForeColor = formTextColor;
+            label8.ForeColor = formTextColor;
+            label9.ForeColor = formTextColor;
+            label3.ForeColor = formTextColor;
+            label4.ForeColor = formTextColor;
+            label7.ForeColor = formTextColor;
+            Contact1.ForeColor = formTextColor;
+            Nic123.ForeColor = formTextColor;
+            Search.ForeColor = buttonBackColor;
+
+
+
+
+            dataGridView1.BackgroundColor = Color.White; // Or any color you want for background
+            dataGridView1.DefaultCellStyle.ForeColor = Color.Black;  // Text color inside grid cells
+            dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = buttonBackColor; // Or any header text color
+            dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = buttonBackColor; // Header background
+
+
+            Button[] buttons = new Button[]
+                {
+                    Insert,
+                    Clear,
+                    Update,
+                    Delete,
+                    Back,
+                    Logout
+
+
+
+                };
+
+            foreach (var btn in buttons)
+            {
+                btn.BackColor = buttonBackColor;
+                btn.ForeColor = buttonForeColor;
+                btn.FlatStyle = FlatStyle.Flat;
+                btn.FlatAppearance.BorderSize = 0;
+            }
+        }
+
+        private void Search_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

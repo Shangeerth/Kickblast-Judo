@@ -36,11 +36,8 @@ namespace Programming_Assigment.Formss
             this.StartPosition = FormStartPosition.CenterScreen;
             this.ForeColor = Color.OrangeRed; // Custom color
 
-
         }
-        
-        
-
+                
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (progressBar1.Value < progressBar1.Maximum)
@@ -73,18 +70,10 @@ namespace Programming_Assigment.Formss
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-           
-
         }
-
         private void progressBar1_Click(object sender, EventArgs e)
         {
-
         }
     }
-
-
-
-
 
 }

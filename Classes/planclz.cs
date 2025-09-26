@@ -18,6 +18,10 @@ namespace Programming_Assigment.Classes
             db = database;
         }
 
+
+
+
+
         public List<Plan> GetPlans()
         {
             List<Plan> plans = new List<Plan>();
@@ -197,16 +201,12 @@ namespace Programming_Assigment.Classes
             if (dt.Rows.Count > 0)
             {
                 int count = Convert.ToInt32(dt.Rows[0][0]);
-                return count == 0; // true = unique
+                return count == 0; 
             }
 
-            return true; // fallback: treat as unique
+            return true;
         }
 
-
-
     }
-
-
 
 }

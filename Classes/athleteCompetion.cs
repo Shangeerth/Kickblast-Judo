@@ -82,7 +82,6 @@ namespace Programming_Assigment.Classes
                 if (CheckAthleteCompetitionExists(athleteId, competitionId, ""))
                     return false;
 
-                // Step 1: Insert into AthleteCompetition and get the new ID
                 string insertCompetitionQuery = @"
             INSERT INTO AthleteCompetition (CompetitionID, AthleteID)
             VALUES (@competitionId, @athleteId);
@@ -96,7 +95,6 @@ namespace Programming_Assigment.Classes
                 object result = db.ExecuteScalar(insertCompetitionQuery, insertParams);
                 int athleteCompetitionId = Convert.ToInt32(result);
 
-                // Step 2: Insert into AthleteCompetitionTrainingPlan for each selected plan
                 foreach (int planId in planIds)
                 {
                     string insertTrainingPlanQuery = @"
@@ -125,7 +123,6 @@ namespace Programming_Assigment.Classes
         {
             try
             {
-                // Step 1: Update AthleteCompetition
                 string updateCompetitionQuery = @"
             UPDATE AthleteCompetition
             SET AthleteID = @athleteId,
@@ -140,7 +137,6 @@ namespace Programming_Assigment.Classes
 
                 db.ExecuteNonQuery(updateCompetitionQuery, updateParams);
 
-                // Step 2: Delete existing training plans for this AthleteCompetitionID
                 string deletePlansQuery = @"
             DELETE FROM AthleteCompetitionTrainingPlan
             WHERE AthleteCompetitionID = @athleteCompetitionId;";
@@ -151,7 +147,6 @@ namespace Programming_Assigment.Classes
 
                 db.ExecuteNonQuery(deletePlansQuery, deleteParams);
 
-                // Step 3: Insert updated training plan IDs
                 foreach (int planId in newPlanIds)
                 {
                     string insertPlanQuery = @"

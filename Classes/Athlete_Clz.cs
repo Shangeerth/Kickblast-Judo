@@ -270,37 +270,6 @@ namespace Programming_Assigment.Athlete
             return ids;
         }
 
-        public bool IsAthleteNameUnique(string name, int athleteId = 0)
-        {
-            string query = "SELECT COUNT(*) FROM Athlete WHERE Name = @name";
-
-            // If updating, exclude current athlete's ID
-            if (athleteId > 0)
-            {
-                query += " AND AthleteID != @athleteId";
-            }
-
-            List<SqlParameter> parameters = new List<SqlParameter>
-    {
-        new SqlParameter("@name", name)
-    };
-
-            if (athleteId > 0)
-            {
-                parameters.Add(new SqlParameter("@athleteId", athleteId));
-            }
-
-            DataTable dt = db.ExecuteQuery(query, parameters.ToArray());
-
-            if (dt.Rows.Count > 0)
-            {
-                int count = Convert.ToInt32(dt.Rows[0][0]);
-                return count == 0;
-            }
-
-            return true; // fallback, treat as unique
-        }
-
 
 
         public List<string> GetCategoryNames()

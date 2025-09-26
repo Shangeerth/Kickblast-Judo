@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -25,9 +26,8 @@ namespace Programming_Assigment.Formss
             dataGridView1.DataSource = link.GetWeightCategories();
             load();
             clear();
-
+            design();
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
@@ -79,13 +79,8 @@ namespace Programming_Assigment.Formss
                     }
                 }
 
-                this.Name = "Weightcategory"; // Now safe, refers to the form's name
-                this.Text = "Weightcategory"; // This is okay, sets the form's title
-
-
-
-
-             
+                this.Name = "Weightcategory"; 
+                this.Text = "Weightcategory";
 
                 string namePattern = @"^[a-zA-Z\s]+$";
                 if (!Regex.IsMatch(Nametxt.Text.Trim(), namePattern))
@@ -94,20 +89,11 @@ namespace Programming_Assigment.Formss
                     return;
                 }
 
-              
-                if (link.IsWeightCategoryNameUnique(namePattern))
-                {
-                    MessageBox.Show("This weight category name already exists. Please use a different name.", "Duplicate Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+
+                string name = Nametxt.Text.Trim();
 
 
-
-
-
-
-
-                bool insertResult = link.InsertWeightCategory(namePattern, minWeight, maxWeight);
+                bool insertResult = link.InsertWeightCategory(name, minWeight, maxWeight);
 
 
                 if (insertResult)
@@ -117,6 +103,7 @@ namespace Programming_Assigment.Formss
                     dataGridView1.DataSource = link.GetWeightCategories();
                     load();
                     clear();
+                    
                 }
                 else
                 {
@@ -149,6 +136,7 @@ namespace Programming_Assigment.Formss
             {
 
 
+                string name = Nametxt.Text.Trim();
 
                 string namePattern = @"^[a-zA-Z\s]+$";
                 if (!Regex.IsMatch(Nametxt.Text.Trim(), namePattern))
@@ -164,7 +152,6 @@ namespace Programming_Assigment.Formss
                     return;
                 }
 
-                // Get selected CategoryID from id control (e.g., ComboBox or ListBox)
                 if (!int.TryParse(id.SelectedValue.ToString(), out int categoryId))
                 {
                     MessageBox.Show("Invalid weight category selected.");
@@ -202,7 +189,7 @@ namespace Programming_Assigment.Formss
 
                 
 
-                bool updateResult = link.UpdateWeightCategory(categoryId, namePattern, minWeight, maxWeight);
+                bool updateResult = link.UpdateWeightCategory(categoryId, name, minWeight, maxWeight);
 
                 if (updateResult)
                 {
@@ -268,15 +255,7 @@ namespace Programming_Assigment.Formss
             id.SelectedIndex = -1;
 
         }
-        private void clear()
-        {
-            Nametxt.Clear();
-            mintxt.Clear();
-            maxtxt.Clear();
-            id.SelectedIndex = -1;
-
-
-        }
+   
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -323,80 +302,34 @@ namespace Programming_Assigment.Formss
             clear();
         }
 
-        private void Athlete_Click(object sender, EventArgs e)
+        private void clear()
         {
-            Form1 newForm = new Form1();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            Trainer newForm = new Trainer();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
-        private void Private_Coaching_Click(object sender, EventArgs e)
-        {
-            Coaching newForm = new Coaching();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Training_plan_Click(object sender, EventArgs e)
-        {
-            Athleteplanform newForm = new Athleteplanform();
-            NavigationManager.OpenForm(this, newForm);
-        }
-
-        private void Plan_Click(object sender, EventArgs e)
-        {
-            TrainningPlan newForm = new TrainningPlan();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Competition_Click(object sender, EventArgs e)
-        {
-            Competition newForm = new Competition();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void Athlete_Competition_Click(object sender, EventArgs e)
-        {
-            CompetitionAthlete newForm = new CompetitionAthlete();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            button1.Enabled = false;
-            Weightcategoryy newForm = new Weightcategoryy();
-            NavigationManager.OpenForm(this, newForm);
+            Nametxt.Clear();
+            mintxt.Clear();
+            maxtxt.Clear();
+            id.SelectedIndex = -1;
 
 
         }
 
-        private void Payment_Click(object sender, EventArgs e)
-        {
-            payment newForm = new payment();
-            NavigationManager.OpenForm(this, newForm);
-
-        }
 
         private void Back_Click(object sender, EventArgs e)
         {
-            NavigationManager.GoBack();
-            this.Close();
+          this.Hide();
         }
 
         private void Logout_Click(object sender, EventArgs e)
         {
-            Welcome wel = new Welcome();
-            wel.Show();
-            this.Close();
+            // Get the Dashboard (top-level parent)
+            Form parentDashboard = this.TopLevelControl as Dashboard;
+            if (parentDashboard != null)
+            {
+                parentDashboard.Close(); // This will close the main Dashboard
+            }
+
+            // Restart app with Welcome/Login
+            System.Diagnostics.Process.Start(Application.ExecutablePath);
+            Application.Exit();
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -413,5 +346,68 @@ namespace Programming_Assigment.Formss
         {
 
         }
+
+        private void Weightcategoryy_Load(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+        private void design()
+        {
+            Color formBackColor = Color.FromArgb(34, 34, 34); // Charcoal Black
+
+            Color buttonBackColor = Color.FromArgb(191, 167, 111);   // #BFA76F (Gold)
+            Color buttonForeColor = Color.FromArgb(26, 26, 26);      // #1A1A1A (Dark)
+            Color formTextColor = Color.FromArgb(230, 225, 210); // #E6E1D2 – Ivory White
+
+
+            this.BackColor = formBackColor;
+
+
+            // Set panel background
+            this.BackColor = formBackColor;
+
+
+            label1.ForeColor = formTextColor;
+            label2.ForeColor = formTextColor;
+            label4.ForeColor = formTextColor;
+            Nic123.ForeColor = formTextColor;
+            Search.ForeColor = buttonBackColor;
+
+
+
+
+            dataGridView1.BackgroundColor = Color.White; // Or any color you want for background
+            dataGridView1.DefaultCellStyle.ForeColor = Color.Black;  // Text color inside grid cells
+            dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = buttonBackColor; // Or any header text color
+            dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = buttonBackColor; // Header background
+
+
+            Button[] buttons = new Button[]
+                {
+                    Insert,
+                    Clear,
+                    Update,
+                    Delete,
+                    Back,
+                    Logout
+
+
+
+                };
+
+            foreach (var btn in buttons)
+            {
+                btn.BackColor = buttonBackColor;
+                btn.ForeColor = buttonForeColor;
+                btn.FlatStyle = FlatStyle.Flat;
+                btn.FlatAppearance.BorderSize = 0;
+            }
+        }
+
+
+
     }
 }
